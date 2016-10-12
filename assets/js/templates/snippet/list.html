@@ -1,0 +1,11 @@
+<!-- Select Multiple -->
+<div class="control-group">
+  <label class="control-label" for="<%- id %>"><%- label %></label>
+  <div class="controls">
+  	<% _.each(defaultValue, function(value, index) { %>
+		<input id="<%- id %>-<%- index %>" name="<%- id %>" type="text" placeholder="<%- value %>" class="Xlarge" />
+  	<br />
+  	<% }); %>
+  	<% if (description != null && description.length > 0) { %><p class="description-block text-muted"><small><%- description %></small></p><% } %>
+  </div>
+</div>

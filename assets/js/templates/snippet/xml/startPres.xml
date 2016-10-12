@@ -1,0 +1,2 @@
+	<presentation defaultLocale="<%= defaultLocale %>">
+		<fieldGroup>

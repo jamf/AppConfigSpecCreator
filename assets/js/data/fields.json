@@ -1,0 +1,321 @@
+[
+  {
+    "title": "input",
+    "fields": {
+      "id": {
+        "label": "Key Name",
+        "type": "input",
+        "value": "input"
+      },
+      "label": {
+        "label": "Label",
+        "type": "input",
+        "value": "Input"
+      },
+      "dataType": {
+        "label": "Data type",
+        "type": "select",
+        "value": [
+          {
+            "value": "string",
+            "label": "String",
+            "selected": true
+          },
+          {
+            "value": "integer",
+            "label": "Integer",
+            "selected": false
+          },
+          {
+            "value": "float",
+            "label": "Float",
+            "selected": false
+          }
+        ]
+      },
+      "defaultValue": {
+        "label": "Default Value",
+        "type": "input",
+        "value": null
+      },
+      "description": {
+        "label": "Description",
+        "type": "input",
+        "value": null
+      }
+    }
+  },
+  {
+    "title": "checkbox",
+    "fields": {
+      "id": {
+        "label": "Key Name",
+        "type": "input",
+        "value": "checkbox"
+      },
+      "label": {
+        "label": "Label",
+        "type": "input",
+        "value": "Label"
+      },
+      "dataType": {
+        "label": "Data type",
+        "type": "select",
+        "hidden": null,
+        "value": [
+          {
+            "value": "boolean",
+            "label": "Boolean",
+            "selected": true
+          }
+        ]
+      },
+      "defaultValue": {
+        "label": "Default Value",
+        "type": "select",
+        "value": [
+          {
+            "value": true,
+            "label": true,
+            "selected": false
+          },
+          {
+            "value": false,
+            "label": false,
+            "selected": true
+          }
+        ]
+      },
+      "description": {
+        "label": "Description",
+        "type": "input",
+        "value": null
+      }
+    }
+  },
+  {
+    "title": "select",
+    "fields": {
+      "id": {
+        "label": "Key Name",
+        "type": "input",
+        "value": "select"
+      },
+      "label": {
+        "label": "Label",
+        "type": "input",
+        "value": "Select"
+      },
+      "dataType": {
+        "label": "Data type",
+        "type": "select",
+        "value": [
+          {
+            "value": "stringArray",
+            "label": "String Array",
+            "selected": true
+          },
+          {
+            "value": "integerArray",
+            "label": "Integer Array",
+            "selected": false
+          },
+          {
+            "value": "floatArray",
+            "label": "Float Array",
+            "selected": false
+          }
+        ]
+      },
+      "options": {
+        "label": "Options",
+        "type": "textarea-split",
+        "value": [
+          "Option one",
+          "Option two"
+        ]
+      },
+      "defaultValue": {
+        "label": "Default Value",
+        "type": "input",
+        "value": null
+      },
+      "description": {
+        "label": "Description",
+        "type": "input",
+        "value": null
+      }
+    }
+  },
+  {
+    "title": "multiselect",
+    "fields": {
+      "id": {
+        "label": "Key Name",
+        "type": "input",
+        "value": "multiselect"
+      },
+      "label": {
+        "label": "Label",
+        "type": "input",
+        "value": "Multiselect"
+      },
+      "dataType": {
+        "label": "Data type",
+        "type": "select",
+        "value": [
+          {
+            "value": "stringArray",
+            "label": "String Array",
+            "selected": true
+          },
+          {
+            "value": "integerArray",
+            "label": "Integer Array",
+            "selected": false
+          },
+          {
+            "value": "floatArray",
+            "label": "Float Array",
+            "selected": false
+          }
+        ]
+      },
+      "options": {
+        "label": "Options",
+        "type": "textarea-split",
+        "value": [
+          "Option one",
+          "Option two"
+        ]
+      },
+      "description": {
+        "label": "Description",
+        "type": "input",
+        "value": null
+      }
+    }
+  },
+  {
+    "title": "list",
+    "fields": {
+      "id": {
+        "label": "Key Name",
+        "type": "input",
+        "value": "list"
+      },
+      "label": {
+        "label": "Label",
+        "type": "input",
+        "value": "List"
+      },
+      "dataType": {
+        "label": "Data type",
+        "type": "select",
+        "value": [
+          {
+            "value": "stringArray",
+            "label": "String Array",
+            "selected": true
+          },
+          {
+            "value": "integerArray",
+            "label": "Integer Array",
+            "selected": false
+          },
+          {
+            "value": "floatArray",
+            "label": "Float Array",
+            "selected": false
+          }
+        ]
+      },
+      "defaultValue": {
+        "label": "Default Values",
+        "type": "textarea-split",
+        "value": [
+          "Value one",
+          "Value two"
+        ]
+      },
+      "description": {
+        "label": "Description",
+        "type": "input",
+        "value": null
+      }
+    }
+  },
+  {
+    "title": "datetime",
+    "fields": {
+      "id": {
+        "label": "Key Name",
+        "type": "input",
+        "value": "datetime"
+      },
+      "label": {
+        "label": "Label",
+        "type": "input",
+        "value": "DateTime"
+      },
+      "dataType": {
+        "label": "Data type",
+        "type": "select",
+        "hidden": null,
+        "value": [
+          {
+            "value": "date",
+            "label": "Date",
+            "selected": true
+          }
+        ]
+      },
+      "defaultValue": {
+        "label": "Default Value",
+        "type": "datetime",
+        "value": null
+      },
+      "description": {
+        "label": "Description",
+        "type": "input",
+        "value": null
+      }
+    }
+  },
+  {
+    "title": "hidden",
+    "fields": {
+      "id": {
+        "label": "Key Name",
+        "type": "input",
+        "value": "Hidden"
+      },
+      "dataType": {
+        "label": "Data type",
+        "type": "select",
+        "value": [
+          {
+            "value": "string",
+            "label": "String",
+            "selected": true
+          },
+          {
+            "value": "integer",
+            "label": "Integer",
+            "selected": false
+          },
+          {
+            "value": "float",
+            "label": "Float",
+            "selected": false
+          }
+        ]
+      },
+      "defaultValue": {
+        "label": "Default Value",
+        "type": "input",
+        "value": "Default Value"
+      }
+    }
+  }
+]
