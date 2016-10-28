@@ -4,6 +4,10 @@
 
 A Drag-and-drop form builder for App Developers who would like to enable MDM admistrators to easily configure Managed App Configuration settings. 
 
+The published version of the tool is available at http://appconfig.org/www/appconfigspeccreator/
+
+For more information regarding the AppConfig.org spec, visit http://appconfig.org/www/appconfig-content/uploads/2016/02/ManagedAppConfig.pdf
+
 ###Notes
 
 * For development & debugging change the data-main for the require script tag in `index.html` 
