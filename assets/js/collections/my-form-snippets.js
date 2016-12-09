@@ -208,7 +208,7 @@ define([
               if (fields.defaultValue.type == "input" || fields.defaultValue.type == "datetime") { // Single default value
 
                 // Check if we have a multi select variable (if so, the tag will be "deviceVariable" or "userVariable" instead of "value")
-                if(!"value" in defaultValue) {
+                if("value" in defaultValue) {
                   fields.defaultValue.value = defaultValue.value["#text"];
                 }
                 else
@@ -233,7 +233,6 @@ define([
                     else
                       this.selected = false;
                   });
-                  //hasDefaultValueType = true;
                 }
 
               } else if (fields.defaultValue.type == "select") { // Multiselect Component uses this
