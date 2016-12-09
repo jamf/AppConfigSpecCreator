@@ -140,10 +140,11 @@ define([
     }
     , findConfigSubsection: function(fields, component) {
       // Returns  the JSON subsection for a specific component
-      $.each(fields, function(field) {
-        if (fields[field].title == component) { 
-          theField = fields[field]; 
-        }
+      $.each(fields, function(field) { // field is an index, e.g. 0, 1, 2, 3...
+
+          if (fields[field].title == component) {
+              theField = fields[field]; 
+          }
       });
       return theField;
     }
@@ -151,24 +152,23 @@ define([
       // This function parses the uploaded xml file to json. We then create new SnippetModels and configure them as appropriate
       var that = this;
 
+
       xmlDoc = $.parseXML( xml.replace(/(\r\n|\n|\r|\t)/gm,"") ),
       $xml = $( xmlDoc ),
       $title = $xml.find('dict');
       specAsJSON = this.xmlToJson(xmlDoc);
 
+
       var dictSections = {};
       $.each(specAsJSON.managedAppConfiguration.dict, function(dataType) {
         if(this.constructor == Array) {
-          console.log("found array");
           $.each(this, function() {
             this.dataType = dataType;
-            console.log(this);
             dictSections[this["@attributes"].keyName] = this;
           });
         } else {
         // Preload dict sections in a dictionary indexed by keyName
         this.dataType = dataType;
-        console.log(this);
         dictSections[this["@attributes"].keyName] = this;
       }
       });
@@ -203,16 +203,45 @@ define([
 
             // Populate default value if it exists
             defaultValue = dictSections[this["@attributes"].keyName].defaultValue;
+            var defaultValueType = null;
             if (defaultValue) {
-              console.log(fields.defaultValue.type);
               if (fields.defaultValue.type == "input" || fields.defaultValue.type == "datetime") { // Single default value
-                fields.defaultValue.value = defaultValue.value["#text"];
+
+                // Check if we have a multi select variable (if so, the tag will be "deviceVariable" or "userVariable" instead of "value")
+                if(!"value" in defaultValue) {
+                  fields.defaultValue.value = defaultValue.value["#text"];
+                }
+                else
+                {
+                  var variable;
+                  if("userVariable" in defaultValue)
+                  {
+                    variable = defaultValue.userVariable["@attributes"]["value"];
+                    defaultValueType = "userVariable";
+                    fields.defaultValue.value = fields.defaultValue.variables.userVariable;
+                  }
+                  else if("deviceVariable" in defaultValue)
+                  {
+                    variable = defaultValue.deviceVariable["@attributes"]["value"];
+                    defaultValueType = "deviceVariable";
+                    fields.defaultValue.value = fields.defaultValue.variables.deviceVariable;
+                  }
+                  fields.defaultValue.type = "select";
+                  $.each(fields.defaultValue.value, function(){
+                    if(this.value == variable)
+                      this.selected = true;
+                    else
+                      this.selected = false;
+                  });
+                  //hasDefaultValueType = true;
+                }
+
               } else if (fields.defaultValue.type == "select") { // Multiselect Component uses this
                 $.each(fields.defaultValue.value, function() {
                   if (this.value == JSON.parse(defaultValue.value["#text"])) {
-                    this.selected = true;
+                      this.selected = true;
                   } else {
-                    this.selected = false;
+                      this.selected = false;
                   }
                 });
               } else if (fields.defaultValue.type == "textarea-split") { // List Component uses this
@@ -244,8 +273,15 @@ define([
               this.selected = (this.value == dataType);
             });
 
-            console.log(model);
-            console.log(fields);
+            // Populate the defaultValueType if it exists
+            if(defaultValueType)
+            {
+
+              $.each(fields.defaultValueType.value, function() {
+                this.selected = (this.value == defaultValueType);
+              });
+            }
+
             // Resave fields after modification
             model.set("fields", fields);
             that.add(model);

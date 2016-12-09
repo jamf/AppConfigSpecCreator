@@ -28,13 +28,18 @@ define([
       this.$el.empty();
       var that = this;
       var containsFile = false;
+
+      //For each snippet, render it to the form
       _.each(this.collection.renderAll(), function(snippet){
         that.$el.append(snippet);
+        //console.log("rendered snippet: " + JSON.stringify(snippet));
       });
       $("#render").val(that.renderForm({
         multipart: this.collection.containsFileType(),
         text: _.map(this.collection.renderAllClean(), function(e){return e.html()}).join("\n")
       }));
+
+      //append the form to the dom
       this.$el.appendTo("#build form");
       this.delegateEvents();
     }
