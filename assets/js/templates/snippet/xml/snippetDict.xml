@@ -1,5 +1,5 @@
 		<<% if (dataType != null) { %><%= dataType %><% } else { %>integer<% } %> keyName="<%- id %>"><% if (typeof defaultValue !== 'undefined' && defaultValue != null && (typeof defaultValue == 'boolean' || defaultValue.length > 0)) {%>
-			<defaultValue><% if (defaultValueType !== 'undefined' && defaultValueType != "literalValue") {
+			<defaultValue><% if (typeof defaultValueType !== 'undefined' && defaultValueType != "literalValue") {
 				if(defaultValueType == "userVariable" && typeof defaultValue === 'string') {%>
 				<userVariable <% } else if (defaultValueType == "deviceVariable") { %>
 				<deviceVariable <% } %>value="<%- defaultValue %>" /><% } else { %><% if (typeof defaultValue !== 'string' && typeof defaultValue !== 'boolean') { _.each(defaultValue, function(value) { %>
