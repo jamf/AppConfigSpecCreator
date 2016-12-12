@@ -1,12 +1,14 @@
-#AppConfig Spec Creator
+#Bootstrap Form Builder
+
+## Warning: Currently using Bootstrap `v. 2.3.1` :dolphin:  (Not Bootstrap 3 ready.)
 
 ##What's this?
 
-A Drag-and-drop form builder for App Developers who would like to enable MDM admistrators to easily configure Managed App Configuration settings. 
+A Drag-and-drop form builder for [twitter bootstrap](http://twitter.github.com/bootstrap/). 
 
-The published version of the tool is available at http://appconfig.org/www/appconfigspeccreator/
+##Where can I see it in action?
 
-For more information regarding the AppConfig.org spec, visit http://appconfig.org/www/appconfig-content/uploads/2016/02/ManagedAppConfig.pdf
+It's hosted on github pages [here](http://minikomi.github.io/Bootstrap-Form-Builder/).
 
 ###Notes
 
