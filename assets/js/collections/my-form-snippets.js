@@ -233,6 +233,7 @@ define([
                     else
                       this.selected = false;
                   });
+                  //hasDefaultValueType = true;
                 }
 
               } else if (fields.defaultValue.type == "select") { // Multiselect Component uses this
