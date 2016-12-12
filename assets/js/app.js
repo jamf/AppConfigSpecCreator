@@ -20,12 +20,14 @@ define([
         title: "Fields"
         , collection: new SnippetsCollection(JSON.parse(fieldsJSON))
       });
-      /* This Tab will be useful later when more languages are supported
-      new TabView({
+      /*new TabView({
         title: "Localization"
         , content: localizationTab
       });
-      */
+      new TabView({
+        title: "Rendered"
+        , content: renderTab
+      });*/
       new TabView({
         title: "About"
         , content: aboutTab
@@ -72,10 +74,9 @@ define([
 
       // Handle click events
       $('html').on('click', function(e) {
-        if (typeof $(e.target).data('original-title') == 'undefined' 
-          && !$(e.target).parents().is('.popover.in') 
-          && (typeof $(e.target).attr("class") == 'undefined' 
-          || !$(e.target).attr("class").includes("languageRemovalButton"))) {
+        if (typeof $(e.target).data('original-title') == 'undefined' &&
+           !$(e.target).parents().is('.popover.in') &&
+           (typeof $(e.target).attr("class") == 'undefined' || !$(e.target).attr("class").includes("languageRemovalButton"))) {
            $('#editLanguagesButton').popover('hide');
         }
       });
