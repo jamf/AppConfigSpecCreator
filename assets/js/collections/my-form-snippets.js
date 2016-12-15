@@ -20,7 +20,6 @@ define([
       this.collection = null;
       PubSub.on("downloadSpec", this.downloadSpec, this);
       PubSub.on("initForm", this.initForm, this);
-      PubSub.on("clearForm", this.clearForm, this);
       this.on("add", this.giveUniqueId);
     }
 
