@@ -45,33 +45,28 @@ define([
 	,
       defaultValueTypeChange: function(mouseEvent, boundContext, type) {
         var model = boundContext.model;
-        if(model.get("title") == "input")
+        switch(type)
         {
+            case "Literal Value":
+                //console.log("literal");
+                model.get("fields")["defaultValue"]["type"] = "input";
+                model.get("fields")["defaultValue"]["value"] = null;
+                break;
 
-            switch(type)
-            {
-                case "Literal Value":
-                    //console.log("literal");
-                    model.get("fields")["defaultValue"]["type"] = "input";
-                    model.get("fields")["defaultValue"]["value"] = null;
-                    break;
+            case "Device Variable":
+                //console.log(model.get("fields"));
+                model.get("fields")["defaultValue"]["type"] = "select";
+                model.get("fields")["defaultValue"]["value"] = model.get("fields")["defaultValue"]["variables"]["deviceVariable"];
+                console.log(model.get("fields")["defaultValue"]["value"]);
+                break;
 
-                case "Device Variable":
-                    //console.log(model.get("fields"));
-                    model.get("fields")["defaultValue"]["type"] = "select";
-                    model.get("fields")["defaultValue"]["value"] = model.get("fields")["defaultValue"]["variables"]["deviceVariable"];
-                    console.log(model.get("fields")["defaultValue"]["value"]);
-                    break;
+            case "User Variable":
+                //console.log("user");
+                model.get("fields")["defaultValue"]["type"] = "select";
+                model.get("fields")["defaultValue"]["value"] = model.get("fields")["defaultValue"]["variables"]["userVariable"];
+                break;
 
-                case "User Variable":
-                    //console.log("user");
-                    model.get("fields")["defaultValue"]["type"] = "select";
-                    model.get("fields")["defaultValue"]["value"] = model.get("fields")["defaultValue"]["variables"]["userVariable"];
-                    break;
-
-           }
-
-        }
+       }
         model.get("fields")["defaultValue"]["defaultType"] =  type;
       }
   });

@@ -153,6 +153,12 @@ define([
       var that = this;
 
 
+      //First things first. Clear the current collection
+      that.models.splice(1, that.models.length - 1);
+
+      console.log("model after deletions: " + JSON.stringify(that.models));
+
+
       xmlDoc = $.parseXML( xml.replace(/(\r\n|\n|\r|\t)/gm,"") ),
       $xml = $( xmlDoc ),
       $title = $xml.find('dict');
@@ -288,6 +294,9 @@ define([
           });
         }
       });
+    },
+    clearForm: function(){
+      $("#target fieldset").remove();
     }
   });
 });
