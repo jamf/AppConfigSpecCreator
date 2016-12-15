@@ -30,8 +30,19 @@ define([
     events:{
       "click #importSpecButton": "importFile"
     },
-    importFile: function() {
-      PubSub.trigger("importFile");
+    importFile: function(clickEvent) {
+
+      //Popup a dialog prompting the user if its ok
+      //that we clear the current form and import an existing one
+      if( confirm("Importing will clear the current form. Continue?")) {
+          PubSub.trigger("importFile");
+      }
+      else
+      {
+          clickEvent.preventDefault();
+      }
+
+
     }
     
   });

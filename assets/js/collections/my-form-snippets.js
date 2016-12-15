@@ -20,6 +20,7 @@ define([
       this.collection = null;
       PubSub.on("downloadSpec", this.downloadSpec, this);
       PubSub.on("initForm", this.initForm, this);
+      PubSub.on("clearForm", this.clearForm, this);
       this.on("add", this.giveUniqueId);
     }
 
@@ -151,6 +152,12 @@ define([
     , initForm: function(xml) {
       // This function parses the uploaded xml file to json. We then create new SnippetModels and configure them as appropriate
       var that = this;
+
+
+      //First things first. Clear the current collection
+      that.models.splice(1, that.models.length - 1);
+
+      console.log("model after deletions: " + JSON.stringify(that.models));
 
 
       xmlDoc = $.parseXML( xml.replace(/(\r\n|\n|\r|\t)/gm,"") ),
@@ -288,6 +295,9 @@ define([
           });
         }
       });
+    },
+    clearForm: function(){
+      $("#target fieldset").remove();
     }
   });
 });
