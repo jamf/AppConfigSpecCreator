@@ -3,11 +3,13 @@ define([
       , "views/temp-snippet"
       , "helper/pubsub"
       , "text!templates/app/renderform.html"
+      , "text!templates/app/groups-form.html"
 ], function(
   $, _, Backbone
   , TempSnippetView
   , PubSub
   , _renderForm
+  , _groupsForm
 ){
   return Backbone.View.extend({
     tagName: "fieldset"
@@ -20,6 +22,7 @@ define([
       PubSub.on("tempDrop", this.handleTempDrop, this);
       this.$build = $("#build");
       this.renderForm = _.template(_renderForm);
+      this.groupsForm = _.template(_groupsForm);
       this.render();
     }
 
@@ -29,11 +32,32 @@ define([
       var that = this;
       var containsFile = false;
 
+      this.$el.append("<div id='bundleVersionDiv'></div>");
+
+
+      if(this.collection.groupCollection.models.length > 0) {
+        this.$el.append("<div class='span6'><div id='groupsFormDiv' class='span6' ></div></div>");
+
+        $("#groupsFormDiv").append(this.groupsForm(this.collection.groupCollection));
+      }
+
+
+      this.$el.append("<div class='span6'><div id='defaultFormDiv'</div>")
+
       //For each snippet, render it to the form
       _.each(this.collection.renderAll(), function(snippet){
-        that.$el.append(snippet);
-        //console.log("rendered snippet: " + JSON.stringify(snippet));
+        if(snippet.attr("data-group") == "__FORM_NAME__"){
+          that.$el.find("#bundleVersionDiv").append(snippet);
+        } else if(snippet.attr("data-group") == ""){
+          that.$el.find("#defaultFormDiv").append(snippet);
+        }else {
+          var groupDiv = "#" + snippet.attr("data-group") + "_DIV";
+          console.log("appending to: " + groupDiv);
+          $(groupDiv).append(snippet);
+        }
+
       });
+
       $("#render").val(that.renderForm({
         multipart: this.collection.containsFileType(),
         text: _.map(this.collection.renderAllClean(), function(e){return e.html()}).join("\n")

@@ -8,6 +8,7 @@ define([
   , "text!templates/popover/popover-textarea-split.html"
   , "text!templates/popover/popover-checkbox.html"
   , "text!templates/popover/popover-datetime.html"
+  , "text!templates/popover/popover-group.html"
   , "templates/snippet/snippet-templates"
   , "bootstrap"
 ], function(
@@ -20,6 +21,7 @@ define([
   , _PopoverTextAreaSplit
   , _PopoverCheckbox
   , _PopoverDatetime
+  , _PopoverGroup
   , _snippetTemplates
 ){
   return Backbone.View.extend({
@@ -35,6 +37,7 @@ define([
         , "textarea-split" : _.template(_PopoverTextAreaSplit)
         , "checkbox" : _.template(_PopoverCheckbox)
         , "datetime" : _.template(_PopoverDatetime)
+        , "group" : _.template(_PopoverGroup)
       }
     }
     , render: function(withAttributes){

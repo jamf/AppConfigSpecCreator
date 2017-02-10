@@ -1,14 +1,14 @@
 define([
        "jquery" , "underscore" , "backbone"
        , "collections/snippets" , "collections/my-form-snippets"
-       , "views/tab" , "views/my-form", "views/locale-view", "views/locales-view", "views/download-spec-view", "views/import-spec-view"
-       , "models/locale-model", "collections/locales-collection"
+       , "views/tab" , "views/my-form", "views/locale-view", "views/locales-view", "views/groups-view", "views/download-spec-view", "views/import-spec-view"
+       , "models/locale-model", "collections/locales-collection", "models/group"
        , "text!data/fields.json", "text!templates/app/localization.html", "text!templates/app/render.html",  "text!templates/app/about.html"
 ], function(
   $, _, Backbone
   , SnippetsCollection, MyFormSnippetsCollection
-  , TabView, MyFormView, LocaleView, LocalesView, DownloadSpecView, ImportSpecView
-  , Locale, LocalesCollection
+  , TabView, MyFormView, LocaleView, LocalesView, AddGroupView, DownloadSpecView, ImportSpecView
+  , Locale, LocalesCollection, GroupModel
   , fieldsJSON, localizationTab, renderTab
   , aboutTab
 ){
@@ -33,6 +33,8 @@ define([
         , content: aboutTab
       });
 
+      //new AddGroupView({model: new GroupModel});
+      new AddGroupView();
       new ImportSpecView();
       new DownloadSpecView();
 

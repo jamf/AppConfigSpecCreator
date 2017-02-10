@@ -180,6 +180,17 @@
         "label": "Description",
         "type": "input",
         "value": null
+      },
+      "group": {
+        "label": "Field Group",
+        "type": "select",
+        "value": [
+          {
+            "value": "",
+            "label": "--no group--",
+            "selected": true
+          }
+        ]
       }
     }
   },
@@ -228,6 +239,17 @@
         "label": "Description",
         "type": "input",
         "value": null
+      },
+      "group": {
+        "label": "Field Group",
+        "type": "select",
+        "value": [
+          {
+            "value": "",
+            "label": "--no group--",
+            "selected": true
+          }
+        ]
       }
     }
   },
@@ -282,6 +304,17 @@
         "label": "Description",
         "type": "input",
         "value": null
+      },
+      "group": {
+        "label": "Field Group",
+        "type": "select",
+        "value": [
+          {
+            "value": "",
+            "label": "--no group--",
+            "selected": true
+          }
+        ]
       }
     }
   },
@@ -331,6 +364,17 @@
         "label": "Description",
         "type": "input",
         "value": null
+      },
+      "group": {
+        "label": "Field Group",
+        "type": "select",
+        "value": [
+          {
+            "value": "",
+            "label": "--no group--",
+            "selected": true
+          }
+        ]
       }
     }
   },
@@ -380,6 +424,17 @@
         "label": "Description",
         "type": "input",
         "value": null
+      },
+      "group": {
+        "label": "Field Group",
+        "type": "select",
+        "value": [
+          {
+            "value": "",
+            "label": "--no group--",
+            "selected": true
+          }
+        ]
       }
     }
   },
@@ -417,6 +472,17 @@
         "label": "Description",
         "type": "input",
         "value": null
+      },
+      "group": {
+        "label": "Field Group",
+        "type": "select",
+        "value": [
+          {
+            "value": "",
+            "label": "--no group--",
+            "selected": true
+          }
+        ]
       }
     }
   },
@@ -591,6 +657,17 @@
             }
           ]
         }
+      },
+      "group": {
+        "label": "Field Group",
+        "type": "select",
+        "value": [
+          {
+            "value": "",
+            "label": "--no group--",
+            "selected": true
+          }
+        ]
       }
     }
   }

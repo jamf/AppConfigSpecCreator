@@ -12,6 +12,16 @@ define([
         }
         return o;
       }, {});
+    },
+    getGroup: function()
+    {
+      var that = this;
+      if("group" in this.get("fields")){
+        return _.findWhere(this.get("fields")["group"]["value"], {selected: true})["value"];
+      }
+      else {
+        return "__FORM_NAME__";
+      }
     }
   });
 });

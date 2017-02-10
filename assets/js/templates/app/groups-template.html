@@ -1,0 +1,6 @@
+<% if(typeof "models" !== "undefined"){ _.each(models, function(o) { %>
+<div class="groupDiv">
+<span><%- o.label %><button type="button" id="<%- o.value %>" class="btn btn-mini btn-danger groupRemove"><span id="<%- o.value %>_RemoveButtonSpan" class="icon-remove"></span></button></span>
+    </div>
+<% }); } %>
+
