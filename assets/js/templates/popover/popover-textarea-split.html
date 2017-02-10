@@ -1,2 +1,4 @@
+<div class="control-group">
 <label class='control-label'> <%- label %> </label>
-<textarea class="field" data-type="<%- type %>" style='min-height: 100px' id='<%- name %>'><% for ( var i = 0; i < value.length ; i++ ) { %><%- value[i] %><% if (i < value.length - 1) { %><%- "\n" %><% } %><% } %></textarea>
+<textarea class="field" data-type="<%- type %>" style='min-height: 100px' id='<%- name %>'  data-trigger="manual" data-toggle="popover" title="Error"><% for ( var i = 0; i < value.length ; i++ ) { %><%- value[i] %><% if (i < value.length - 1) { %><%- "\n" %><% } %><% } %> </textarea>
+</div>

@@ -5,9 +5,9 @@ define([
 ], function($, _, Backbone, PubSub) {
 	
   return Backbone.Model.extend({
-
     initialize: function() {
       this.set("fresh", true);
+      //this.initGroup();
       PubSub.on("inputDefaultValueTypeChange", this.defaultValueTypeChange, this);
     }
 	
@@ -68,6 +68,79 @@ define([
 
        }
         model.get("fields")["defaultValue"]["defaultType"] =  type;
+      },
+
+      getGroup: function()
+      {
+          var that = this;
+          if("group" in this.get("fields")){
+              return _.findWhere(this.get("fields")["group"]["value"], {selected: true})["value"];
+          }
+          else {
+              return "__FORM_NAME__";
+          }
+      },
+
+      getGroupLabel: function()
+      {
+        if("group" in this.get("fields")){
+            return _.findWhere(this.get("fields")["group"]["value"], {selected: true})["label"];
+        }
+        else
+        {
+            return "__FORM_NAME__";
+        }
       }
+
+      ,addGroup: function(group)
+      {
+          if("group" in this.get("fields")) {
+              this.get("fields")["group"]["value"].push(group.getJSON());
+              console.log("groups: " + JSON.stringify(this.get("fields")["group"]["value"]));
+          }
+      }
+
+      ,setGroup: function(group)
+      {
+          if("group" in this.get("fields")) {
+              _.findWhere(this.get("fields")["group"]["value"], {selected: true})["selected"] = false;
+              _.findWhere(this.get("fields")["group"]["value"], {label: group})["selected"] = true;
+              this.trigger("change");
+          }
+      }
+
+      ,setGroups: function(groups){
+          var that = this;
+
+          // Only set the groups if the current number of groups is only 1.
+          // This will only be the case if a new snippet is being added to the form, and
+          // guards against duplicate group representations if a snippet is reordered in the form
+          //console.log(JSON.stringify(this.get("fields")));
+          if(this.get("fields").hasOwnProperty("group") && this.get("fields")["group"]["value"].length == 1)
+          {
+              //that.initGroup();
+              _.each(groups.groups, function(group) {
+                  that.get("fields")["group"]["value"].push(group);
+              });
+          }
+      },
+
+      removeGroup: function(group)
+      {
+          if("group" in this.get("fields")){
+              var groups = this.get("fields")["group"]["value"];
+              var groupToRemove = _.findWhere(groups, {value: group});
+
+              console.log("Removing group: " + JSON.stringify(groupToRemove));
+
+              //if the current selected group is the group to remove, change the group to `none`
+              if(groupToRemove.selected){
+                  _.findWhere(groups, {value: ""}).selected = true;
+              }
+
+              this.get("fields")["group"]["value"] = _.without(groups, groupToRemove);
+          }
+      }
+
   });
 });

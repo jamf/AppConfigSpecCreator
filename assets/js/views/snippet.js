@@ -9,6 +9,7 @@ define([
   , "text!templates/popover/popover-textarea-split.html"
   , "text!templates/popover/popover-checkbox.html"
   , "text!templates/popover/popover-datetime.html"
+  , "text!templates/popover/popover-message.html"
   , "templates/snippet/snippet-templates"
   , "templates/snippet/xml/snippet-xml-templates"
   , "helper/pubsub"
@@ -23,6 +24,7 @@ define([
   , _PopoverTextAreaSplit
   , _PopoverCheckbox
   , _PopoverDatetime
+  , _PopoverMessage
   , _snippetTemplates
   , _snippetXmlTemplates
   , _PubSub
@@ -49,15 +51,12 @@ define([
     , render: function(withAttributes){
       var that = this;
 
-      //populates the main popover template with the more specific popover template of the specified field type
       var content = _.template(_PopoverMain)({
         "title": that.model.get("title"),
         "items" : that.model.get("fields"),
         "popoverTemplates": that.popoverTemplates
       });
 
-      //console.log("content: " + content);
-      //Add listener to input for "Default Value Type"
 
       if (withAttributes) {
         return this.$el.html(
@@ -67,6 +66,7 @@ define([
           , "data-title"     : that.model.get("title")
           , "data-trigger"   : "manual"
           , "data-html"      : true
+          , "data-group"     : that.model.getGroup()
         });
       } else {
         return this.$el.html(
@@ -83,10 +83,14 @@ define([
       return that.presTemplate(that.model.getValues());
     }
     ,
+    /**
+     * This function is used to update a popover template when something changes with how it should be displayed in the popover. (Think AJAX)
+     * @param model The model of the snippet to query for values
+     * @param elem  The JQuery element being modified
+     * @param type  The type of snippet being affected
+     */
       updatePopoverTemplate: function(model, elem, type) {
-        console.log("updating popover");
 
-        //this.template(model.getValues());
         switch(type)
         {
             case "input":

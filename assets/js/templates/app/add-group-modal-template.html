@@ -1,0 +1,33 @@
+<!-- Modal -->
+<div id="addGroupModal" class="modal hide fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal Content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <legend>
+                    <h4 class="modal-title">Groups
+                        <button type="button" id="addGroup" class="btn btn-small" style="float: right"><span class="icon-plus"></span></button>
+                        <!-- <div class="control-group"> -->
+                            <input id="groupName" type="text" data-trigger="manual" data-toggle="popover" data-content="Name cannot be empty" title="Error"/>
+                        <!-- </div> -->
+                    </h4>
+                </legend>
+
+            <div class="modal-body">
+                <div class="control-group">
+                    <span id="modalMessage" ></span>
+                    <!-- groups template rendered here -->
+                    <div id="groupsDiv" class="scrollable"></div>
+                    <!--<legend />
+                    <input id="groupName" type="text" /> -->
+              </div>
+            </div>
+            <div class="modal-footer">
+                <!-- <button id="addGroup" type="button" class="btn btn-info" >Save</button> -->
+                <button type="button" class="btn btn-default cancelModal" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Modal

@@ -141,7 +141,15 @@
     description:
       label  : Description
       type   : input
-      value  : 
+      value  :
+    group:
+      label  : Field Group
+      type   : select
+      value  :
+        -
+          value: ""
+          label: "--no group--"
+          selected: true
 -
   title  : checkbox
   fields : 
@@ -177,7 +185,15 @@
     description:
       label  : Description
       type   : input
-      value  : 
+      value  :
+    group:
+      label  : Field Group
+      type   : select
+      value  :
+        -
+          value: ""
+          label: "--no group--"
+          selected: true
 -
   title  : select
   fields : 
@@ -217,6 +233,14 @@
       label  : Description
       type   : input
       value  :
+    group:
+      label  : Field Group
+      type   : select
+      value  :
+        -
+          value: ""
+          label: "--no group--"
+          selected: true
 -
   title  : multiselect
   fields : 
@@ -252,6 +276,14 @@
       label  : Description
       type   : input
       value  :
+    group:
+      label  : Field Group
+      type   : select
+      value  :
+        -
+          value: ""
+          label: "--no group--"
+          selected: true
 -
   title  : list
   fields : 
@@ -286,7 +318,15 @@
     description:
       label  : Description
       type   : input
-      value  : 
+      value  :
+    group:
+      label  : Field Group
+      type   : select
+      value  :
+        -
+          value: ""
+          label: "--no group--"
+          selected: true
 -
   title  : datetime
   fields :
@@ -314,7 +354,15 @@
     description:
       label  : Description
       type   : input
-      value  : 
+      value  :
+    group:
+      label  : Field Group
+      type   : select
+      value  :
+        -
+          value: ""
+          label: "--no group--"
+          selected: true
 -
   title  : hidden
   fields :
@@ -450,3 +498,11 @@
             value    : upn
             label    : UPN
             selected : false
+    group:
+      label  : Field Group
+      type   : select
+      value  :
+        -
+          value: ""
+          label: "--no group--"
+          selected: true

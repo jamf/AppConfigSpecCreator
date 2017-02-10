@@ -19,6 +19,8 @@ define(function(require) {
   , startPres                = require('text!templates/snippet/xml/startPres.xml')
   , endPres                  = require('text!templates/snippet/xml/endPres.xml')
   , endSpec                  = require('text!templates/snippet/xml/endSpec.xml')
+  , startGroup               = require('text!templates/snippet/xml/startGroup.xml')
+  , endGroup                 = require('text!templates/snippet/xml/endGroup.xml')
 
   return {
     checkboxDict              : checkboxDict
@@ -34,12 +36,14 @@ define(function(require) {
     , datetimeDict            : datetimeDict
     , datetimePres            : datetimePres
     , listDict                : listDict
-    , listPres                : listPres  
+    , listPres                : listPres
     , formnameDict            : formnameDict
     , formnamePres            : formnamePres
     , endDict                 : endDict
     , startPres               : startPres
     , endPres                 : endPres
     , endSpec                 : endSpec
+    , startGroup              : startGroup
+    , endGroup                : endGroup
   }
 });

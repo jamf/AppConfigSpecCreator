@@ -1,3 +1,7 @@
+html {
+    overflow-y: auto;
+}
+
 body {
   padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
   padding-bottom: 10px;
@@ -9,6 +13,8 @@ body {
     padding-top: 0px;
   }
 }
+
+
 
 #formContainer {
   min-height: 680px;
@@ -140,7 +146,7 @@ small, .small {
 
 div.inflow {
   position: relative; 
-  width: 50%;
+  width: 60%;
   margin-left: 10px
 }
 
@@ -162,6 +168,10 @@ div.positioner {position: absolute; right: 0;} /*may not be needed: see below*/
 #languagesContainer {
   float:left;
   width: 60%;
+}
+
+#modalMessage{
+    display: none;
 }
 
 .inline {
@@ -186,6 +196,10 @@ div.positioner {position: absolute; right: 0;} /*may not be needed: see below*/
 
 .topPadded {
   margin-top:10px !important;
+}
+
+.rightPadded {
+    margin-right: 30px !important;
 }
 
 .topSpecButton {
@@ -224,4 +238,55 @@ div.positioner {position: absolute; right: 0;} /*may not be needed: see below*/
   text-overflow: ellipsis;
   overflow: hidden;
   width: inherit;
+}
+
+.formScrollDiv {
+    height: 70vh;
+}
+
+.modal-header legend {
+    padding-bottom: 10px;
+}
+
+.popover-message {
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.groupRemove {
+    float: right;
+}
+
+.groupDiv {
+    margin-bottom: 5px;
+    height: 22px;
+    /* font-family: sans-serif; */
+    font-weight: 400;
+    font-size: 20px;
+
+}
+
+.groupDiv:hover {
+    background-color: #dddddd;
+}
+
+.groupsForm {
+    background-color: #d9d9d9;
+    margin-bottom: 39px;
+    padding-bottom: 1px;
+    padding-left: 5px;
+    padding-top: 2px;
+}
+
+#addGroup {
+    margin-top: 2px;
+}
+
+#groupsDiv {
+    max-height: 18vh;
+}
+
+#groupName {
+    float: right;
+    margin-right: 15px;
 }
