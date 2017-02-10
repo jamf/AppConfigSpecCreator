@@ -31,13 +31,14 @@
     <div class="container" id="formContainer">
       <div class="row clearfix">
         <!-- Building Form. -->
-        <div class="span6">
+        <div class="span7">
           <div class="clearfix topPadded">
             <h2 class="inline">Your Form</h2>
             <div id="downloadSpec" class="inline topSpecButton"></div>
             <div id="importSpec" class="inline topSpecButton"></div>
+            <div id="addGroup" class="rightPadded topSpecButton"></div>
             <hr>
-            <div id="build">
+            <div id="build" class="formScrollDiv scrollable">
               <form id="target" class="form-horizontal">
               </form>
             </div>
