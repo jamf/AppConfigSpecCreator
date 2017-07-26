@@ -1,33 +1,46 @@
-#Bootstrap Form Builder
+AppConfig Spec Creator
+======================
+This tool is an AppConfig xml spec creation tool built around simplifying the creation of xml spec files.
 
-## Warning: Currently using Bootstrap `v. 2.3.1` :dolphin:  (Not Bootstrap 3 ready.)
+Using the tool
+--------------
+This tool is pretty simple to use. Just deploy it under any web server or navigate to the `index.html` file from any browser
+(it works without a web server). Add fields by clicking the `addField` button and edit the fields per your needs. Groups are 
+the same but with the `groups` button. Fields and groups can be reordered by dragging them up and down the form. When all configuration is done, download your spec file by clicking the `download` button.
+If you wish to load a previously or externally created spec, use the `import` button. NOTE: importing erases the currently created
+spec in your form. 
 
-##What's this?
+Some functionality has yet to be completed. Constraints have yet to support specific values and localization support is not
+created.
 
-A Drag-and-drop form builder for [twitter bootstrap](http://twitter.github.com/bootstrap/). 
+Navigating the code base
+------------------------
+This tool uses Backbone.js as its core functionality library. The code is set up in a few different sections. 
+There are models, views, collections, templates, and helpers. 
 
-##Where can I see it in action?
+Models: These are just what they sound like. Standard in any MVC framework, the models are the actual object 
+    housing the data. These are how snippets, constraints, groups, and a few other things are represented.
+    
+Views: Also standard in any MVC framework, these are the actual presentation of a model's data visually on screen.
+    There are views for standard form rendering as well as modal rendering. Since a model is edited in a modal,
+    we have to have a different view for that modal. Views are broken up into regular views and modal views to help
+    code organization.
+    
+Collections: These are a Backbone tool that helps a lot with maintaining groups of models. Backbone makes it easy
+    to manage an array of snippets, options, and groups by putting them in collections and allowing events to be
+    permeated throughout. Essentially these are just fancy arrays given to us by Backbone.
+    
+Templates: These are incredibly handy. Backbone relies on Underscore.js and one of the great things Underscore
+    has is templating for EJS (embedded javascript).  Similar to the views, we have templates broken down into categories.
+    There are the regular templates which template out standard views to the web page, then we have modal templates that
+    template out the modals for when we are editing a model. There are also xml templates that are responsible for templating
+    a model out to the xml spec representation. NOTE: some of the EJS is VERY convoluted because of formatting. 
+    
+Helpers: These are helpful pieces that simplify getting things done in the code. The biggest thing here is the PubSub
+    tool. This is a wrapper around the Backbone.Events service and allows us to send publish/subscribe messages around 
+    decoupled pieces of the code base. 
+    
+    
 
-It's hosted on github pages [here](http://minikomi.github.io/Bootstrap-Form-Builder/).
-
-###Notes
-
-* For development & debugging change the data-main for the require script tag in `index.html` 
-  to point at `assets/js/main.js`. (Look just before the closing `<body>` tag!)
-
-* Once done, change it back to  build for production using the `build.js` script in the `assets/js/lib`
-  folder and [r.js](https://github.com/jrburke/r.js/). Then revert to `assets/js/main-built.js`
-
-* The full command is `r.js -o assets/js/lib/build.js` which should be run from the base directory.
-
-### Adding new form elements
-
-* In the [js/data/ folder](https://github.com/minikomi/Bootstrap-Form-Builder/tree/gh-pages/assets/js/data/) are yaml files, each of which corresponds to a tab in the form builder.
-* If you just want to add a new element you need to:
-  - describe it in one of these files
-  - parse the yaml to json using parse.rb in the same folder
-  - create a corresponding template in the [templates/snippet directory](https://github.com/minikomi/Bootstrap-Form-Builder/tree/gh-pages/assets/js/templates/snippet)
-  - add the template to [snippet-templates.js](https://github.com/minikomi/Bootstrap-Form-Builder/blob/gh-pages/assets/js/templates/snippet/snippet-templates.js)
-* If you want to add a new tab, you'll also need to adjust the [app.js file](https://github.com/minikomi/Bootstrap-Form-Builder/blob/gh-pages/assets/js/app.js) to make sure the tab is loaded.
-
-Don't forget to switch to main.js rather than main-built.js, or the changes you make before compiling with require.js won't show up!
+NOTE: much of this code base is hard to understand if Backbone.js is not understood. There's no real way to mitigate that
+    except for code comments. Learning Backbone is a bit of a prerequisite to fully understanding this code base.

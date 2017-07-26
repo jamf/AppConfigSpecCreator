@@ -1,0 +1,4 @@
+<managedAppConfiguration>
+	<version><%= version %></version>
+	<bundleId><%= bundle %></bundleId>
+	<dict>

@@ -1,0 +1,56 @@
+<%
+//get the data type of the modal
+var dataType = view.linkedView.getDataType();
+var defaultValueType = view.model.get("type");
+if(typeof dataType === 'undefined') dataType = "Integer";
+if(typeof defaultValueType === 'undefined') defaultValueType = "Literal";
+
+    if(dataType.includes("Array"))
+    { %>
+
+
+
+                <div class="form-control multiselect" id="">
+                    <ul class="list-group" id="defaultValue">
+                        <!--default values will be templated here -->
+
+
+                    </ul>
+                </div>
+                <div class="btn-group pull-right">
+                    <button type="button" class="btn btn-xs btn-default" id="fieldDefaultValueAdd" data-array="defaultValue"><span class="glyphicon glyphicon-plus"></span></button>
+                </div>
+<%  }
+    else if(dataType == "Boolean")
+    { %>
+            <div class="defaultValue-checkbox">
+            <input type="checkbox" id="fieldDefaultValue" value="" <%- view.model.get("value") ? "checked" : ""%>/>
+            </div>
+<%  }
+    else if(dataType == "Date")
+    { %>
+                <input type="datetime-local" id="fieldDefaultValue" class="form-control" value="<%- view.model.get("value") ? view.model.get("value") : ""%>"/>
+<%  }
+    else {
+        if(defaultValueType != "Literal")
+        { %>
+            <select type="select" id="fieldDefaultValue" class="form-control">
+            <%
+                var variableType = defaultValueType.split(" ")[0];
+                _.each(view.model.emmVariables, function(variableTypeValue, variableTypeKey) { %>
+            <%      if(variableTypeKey.capitalizeFirstLetter() == variableType) {  %>
+            <%          _.each(variableTypeValue, function(variable) {  %>
+                            <option <%- variable.label == view.model.get("value") ? "selected": ""%>><%- variable.label %></option>
+            <%          });  %>
+            <%      }   %>
+            <%  });  %>
+            </select>
+<%      }
+        else { %>
+            <input type="text" id="fieldDefaultValue" class="form-control" placeholder="Default Value" value="<%- view.model.get("value") ? view.model.get("value") : ""%>"/>
+<%      }
+    }
+%>
+
+
+

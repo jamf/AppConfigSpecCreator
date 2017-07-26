@@ -1,292 +1,169 @@
-html {
-    overflow-y: auto;
-}
-
 body {
-  padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-  padding-bottom: 10px;
-  position: relative;
+    padding-top: 50px;
 }
 
-@media (max-width: 979px) {
-  body {
-    padding-top: 0px;
-  }
-}
-
-
-
-#formContainer {
-  min-height: 680px;
-}
-
-#components {
-  min-height: 411px;
-}
-
-#target fieldset {
-  border: 1px solid #ccc;
-  min-height: 200px;
-  padding: 5px;
-  padding-bottom: 30px;
-}
-
-.component {
-  cursor: pointer;
-}
-
-input {
-  cursor: pointer;
-}
-
-textarea {
-  resize: vertical;
-}
-
-.popover {
-  z-index: 9999999;
-}
-.popover .control-group {
-  cursor: default;
-  margin-bottom: 0px;
-  padding-top: 5px;
-}
-
-.popover input {
-  cursor: text;
-}
-
-.temp{
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  position: absolute;
-  z-index: 999999;
-  top: 0;
-  overflow-x: hidden;
-  left: 0;
-}
-
-.temp form {
-  padding: 8px 4px;
-  border: 1px dotted #ccc;
-  position: absolute;
-  background: white;
-  box-shadow: 0px 0px 30px #999;
-  -webkit-transition: -webkit-transform 0.1s ease-out;
-  overflow: hidden;
-}
-
-#render{
-  min-height: 350px;
-  font-family: monospace;
-}
-
-/* Popovers now are appended to their parent rather
-than to the body/main document as they once were.
-We need to over-ride some inherited stuff.. */
-form .popover .controls {
-  margin-left: 0;
-}
-
-form .popover .control-label {
-  text-align: left;
-}
-
-form .popover form {
-  width: 224px;
-}
-
-.popover-content form .btn{
-  margin-right: 10px
-}
-
-.target:after{
-  float:left;
-  content: " ";
-  height: 77px; 
-  margin-top: 3px;
-  background: #f0f0f0;
-  width: 100%;
-  border: 1px dashed #ccc;
-}
-
-#target, #input, #radioscheckboxes, #select, #buttons {
- -webkit-touch-callout: none;
- -webkit-user-select: none;
- -khtml-user-select: none;
- -moz-user-select: none;
- -ms-user-select: none;
- user-select: none;
-}
-
-#target fieldset{
- width: 100%;
- overflow: hidden;
-}
-
-.text-muted {
-    color: #777;
-}
-
-small, .small {
-    font-size: 85%;
-}
-
-.popover.right .arrow {
-  top:20%;
-}
-
-#componentSection {  
-  aposition: fixed;
-  aright: -3%;
-  amax-width: 600px;
-  amin-width: 500px;
-}
-
-div.inflow {
-  position: relative; 
-  width: 60%;
-  margin-left: 10px
-}
-
-div.fixed {
-  height: 100px; 
-  position: fixed; 
-}
-
-div.positioner {position: absolute; right: 0;} /*may not be needed: see below*/
-
-.scrollable {
-  overflow-y: scroll;
-}
-
-#localizationDiv {
-  max-height:400px;
-}
-
-#languagesContainer {
-  float:left;
-  width: 60%;
-}
-
-#modalMessage{
-    display: none;
-}
-
-.inline {
-  display: inline;
-}
-
-#inline-btn {
-
-}
-
-.btn:focus {
-  outline: none;
-}
-
-.languageInput {
-  width:60px;
-}
-
-.bottomPadded {
-  margin-bottom:10px !important;
-}
-
-.topPadded {
-  margin-top:10px !important;
-}
-
-.rightPadded {
-    margin-right: 30px !important;
-}
-
-.topSpecButton {
-  float:right;
-  margin-left:10px;
-}
-
-.languageRemovalButton {
-  margin-left: 5px;
-}
-
-.btn-file {
-    position: relative;
-    overflow: hidden;
-}
-.btn-file input[type=file] {
+input[type=checkbox] {
+    transform: scale(1.2);
     position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
-    cursor: inherit;
-    display: block;
+    margin-left: 2px;
 }
 
-.formInfo {
-  float:left;
-  font-size: 16px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  width: inherit;
+hr{
+    background-color: #9d9d9d;
 }
 
-.formScrollDiv {
+ul {
+    padding-left: 0;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+.navbar-btn{
+    margin: 10px;
+}
+
+.form{
+    width: 100%;
     height: 70vh;
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: scroll;
 }
 
-.modal-header legend {
+.modal-body {
+    max-height: 450px;
+    overflow-y: scroll;
+    margin-right: 0px;
+}
+
+.form-inline .form-control{
+    width: 100%;
+}
+
+.form-bundle-version {
+    margin-top: 5px;
+    margin-bottom: 3px;
+    padding-top: 7px;
+    padding-bottom: 6px;
+    padding-right: 0;
+}
+
+.form-snippet{
+    position: relative;
+    left: 0px;
+    top: 0px;
+    margin-top: 5px;
+    margin-bottom: 3px;
+    padding-top: 7px;
+    padding-bottom: 6px;
+    padding-right: 0;
+    height: 40px;
+}
+
+.form-snippet-value-div {
+    padding-right: 0;
+}
+
+.form-snippet-hamburger-div{
+    padding-left: 0;
+}
+
+.drag-hamburger {
+    margin: 0;
+    padding: 0;
+}
+
+.multiselect{
+    padding: 0px;
+    height: 85px;
+    overflow-y: scroll;
+}
+
+.group{
+    border-radius: 4px;
+
+    margin-top: 15px;
+    margin-bottom: 15px;
+
+    background-color: #d4d4d4;
+    margin-bottom: 15px;
+    min-height: 100px;
     padding-bottom: 10px;
-}
-
-.popover-message {
-    font-weight: normal;
-    font-size: 14px;
-}
-
-.groupRemove {
-    float: right;
-}
-
-.groupDiv {
-    margin-bottom: 5px;
-    height: 22px;
-    /* font-family: sans-serif; */
-    font-weight: 400;
-    font-size: 20px;
 
 }
 
-.groupDiv:hover {
-    background-color: #dddddd;
+.list-group-item{
+    height: 24px;
+    padding-top: 0px;
+    vertical-align: top;
+
 }
 
-.groupsForm {
-    background-color: #d9d9d9;
-    margin-bottom: 39px;
-    padding-bottom: 1px;
-    padding-left: 5px;
-    padding-top: 2px;
+.group-item{
+    height: 35px;
+    padding-top: 0px;
+    vertical-align: top;
+    font-size: 170%;
 }
 
-#addGroup {
-    margin-top: 2px;
+.arrayOptionEdit{
+    height: 16px;
+    width: 15px;
+    margin-right: 2px;
+    margin-top: 3px;
 }
 
-#groupsDiv {
-    max-height: 18vh;
+.arrayOptionRemove{
+    height: 16px;
+    width: 15px;
+    margin-left: 3px;
+    margin-top: 3px;
+
 }
 
-#groupName {
-    float: right;
-    margin-right: 15px;
+.arrayOptionEdit span{
+    position: absolute;
+    margin-top: 4px;
+    margin-left: -6px;
+}
+
+.arrayOptionRemove span{
+    position: absolute;
+    margin-top: 4px;
+    margin-left: -6px;
+}
+
+.group-item-btn{
+    margin-top: 6px;
+    margin-right: 5px;
+}
+
+.defaultValue-checkbox {
+    transform: scale(1.2);
+    margin-left: 22px;
+    margin-top: 5px;
+}
+
+.date {
+    width: 100%;
+}
+
+.constraintField {
+    margin: 10px 0px;
+}
+
+.constraintSelectCheckbox {
+    margin: 10px 0px 43px 0px;
+}
+
+#arrayElementModal {
+    z-index: 9999;
+}
+
+li {
+    list-style: none;
 }

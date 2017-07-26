@@ -1,0 +1,16 @@
+<% if(typeof type === 'undefined') type = "Literal";
+   if(type == "Literal") { %>
+        <input type="text" id="elementValue" class="form-control" placeholder="value" value="<%- model.get("value") %>"/>
+<% } else { %>
+        <select type="select" id="elementValue" class="form-control">
+            <%
+                type = type.split(" ")[0];
+                _.each(model.emmVariables, function(variableTypeValue, variableTypeKey) { %>
+            <%      if(variableTypeKey.capitalizeFirstLetter() == type) {  %>
+            <%          _.each(variableTypeValue, function(variable) {  %>
+            <option <%- variable.label == model.get("value") ? "selected": ""%>><%- variable.label %></option>
+            <%          });  %>
+            <%      }   %>
+            <%  });  %>
+        </select>
+<% }%>

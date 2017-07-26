@@ -1,146 +1,100 @@
-// model/snippet.js aka SnippetModel
+//models/snippet
+
 define([
-      'jquery', 'underscore', 'backbone',
-      'helper/pubsub'
-], function($, _, Backbone, PubSub) {
-	
-  return Backbone.Model.extend({
-    initialize: function() {
-      this.set("fresh", true);
-      //this.initGroup();
-      PubSub.on("inputDefaultValueTypeChange", this.defaultValueTypeChange, this);
-    }
-	
-    , getValues: function(){
-      var that = this;
-      return _.reduce(this.get("fields"), function(o, v, k){
-        if (v["type"] == "select") {
-          //console.log(v["value"])
-          o[k] = _.find(v["value"], function (o) {
-              //console.log("o" + o["value"]);
-              return o.selected
-          })["value"];
-      }
-        else {
-            o[k] = v["value"];
-        }
+	"jquery", "underscore", "backbone", "helper/pubsub",
+	"helper/data-types", "helper/array-types", "helper/variable-types",
+	"models/form-element", "views/snippet", "models/default-value", "models/constraint",
+	"collections/array-options",
+	"text!templates/xml/dict-snippet.xml",
+	"text!templates/xml/pres-snippet.xml",
+	"models/localized-value"
+], function ($, _, Backbone, PubSub, DataTypes, ArrayTypes, VariableTypes,
+             FormElementModel, SnippetView, DefaultValueModel, ConstraintsModel,
+             ArrayOptionsCollection, DictXMLTemplate, PresXMLTemplate, LocalizedValueModel) {
+	return FormElementModel.extend({
 
+		type: "snippet",
+		dictTemplate: _.template(DictXMLTemplate),
+		presTemplate: _.template(PresXMLTemplate),
 
-        return o;
-      }, {});
-    }
-	
-    , idFriendlyTitle: function(){
-      return this.get("title").replace(/\W/g,'').toLowerCase();
-    }
-	
-    , setField: function(name, value) {
-      var fields = this.get("fields")
-      fields[name]["value"] = value;
-      this.set("fields", fields);
-    }
-    , parseInputField: function(){
+		initialize: function () {
+			this.dataTypes = DataTypes;
+			this.arrayTypes = ArrayTypes;
+			this.variableTypes = VariableTypes;
 
-      }
-	,
-      defaultValueTypeChange: function(mouseEvent, boundContext, type) {
-        var model = boundContext.model;
-        switch(type)
-        {
-            case "Literal Value":
-                //console.log("literal");
-                model.get("fields")["defaultValue"]["type"] = "input";
-                model.get("fields")["defaultValue"]["value"] = null;
-                break;
+			//This variable is used to track if this model is just being added for the first time
+			this.fresh = true;
 
-            case "Device Variable":
-                //console.log(model.get("fields"));
-                model.get("fields")["defaultValue"]["type"] = "select";
-                model.get("fields")["defaultValue"]["value"] = model.get("fields")["defaultValue"]["variables"]["deviceVariable"];
-                console.log(model.get("fields")["defaultValue"]["value"]);
-                break;
+			var fields = {
+				name: "",
+				label: new LocalizedValueModel(),
+				dataType: "Integer", // <- the default dataType will be a plain Integer
+				defaultValue: new DefaultValueModel(this),  // <- create the default value model for this snippet
+				arrayType: "Select",
+				description: new LocalizedValueModel(),
+				options: new ArrayOptionsCollection(),  //<- the collection of array options
+				group: "-- none --",  // <- the default group will be the reserved `-- none --` group
+				constraints: new ConstraintsModel("Integer")
+			};
 
-            case "User Variable":
-                //console.log("user");
-                model.get("fields")["defaultValue"]["type"] = "select";
-                model.get("fields")["defaultValue"]["value"] = model.get("fields")["defaultValue"]["variables"]["userVariable"];
-                break;
+			this.set("fields", fields);
+			PubSub.on("RemoveGroup", this.removeGroup, this);
 
-       }
-        model.get("fields")["defaultValue"]["defaultType"] =  type;
-      },
+			PubSub.on("LocaleAdd", this.add, this);
+		}
 
-      getGroup: function()
-      {
-          var that = this;
-          if("group" in this.get("fields")){
-              return _.findWhere(this.get("fields")["group"]["value"], {selected: true})["value"];
-          }
-          else {
-              return "__FORM_NAME__";
-          }
-      },
+		, setLocalesCollection: function (collection) {
+			this.localesCollection = collection;
+			return this;
+		}
 
-      getGroupLabel: function()
-      {
-        if("group" in this.get("fields")){
-            return _.findWhere(this.get("fields")["group"]["value"], {selected: true})["label"];
-        }
-        else
-        {
-            return "__FORM_NAME__";
-        }
-      }
+		, getLocalesCollection: function () {
+			return this.localesCollection;
+		}
 
-      ,addGroup: function(group)
-      {
-          if("group" in this.get("fields")) {
-              this.get("fields")["group"]["value"].push(group.getJSON());
-              console.log("groups: " + JSON.stringify(this.get("fields")["group"]["value"]));
-          }
-      }
+		, setGroupsCollection: function (collection) {
+			this.groupsCollection = collection;
+			return this;
+		}
 
-      ,setGroup: function(group)
-      {
-          if("group" in this.get("fields")) {
-              _.findWhere(this.get("fields")["group"]["value"], {selected: true})["selected"] = false;
-              _.findWhere(this.get("fields")["group"]["value"], {label: group})["selected"] = true;
-              this.trigger("change");
-          }
-      }
+		, getGroupsCollection: function () {
+			return this.groupsCollection;
+		}
 
-      ,setGroups: function(groups){
-          var that = this;
+		, removeGroup: function (groupName) {
+			if (this.get("fields").group == groupName) {
+				this.get("fields").group = "-- none --";
+			}
+		}
 
-          // Only set the groups if the current number of groups is only 1.
-          // This will only be the case if a new snippet is being added to the form, and
-          // guards against duplicate group representations if a snippet is reordered in the form
-          //console.log(JSON.stringify(this.get("fields")));
-          if(this.get("fields").hasOwnProperty("group") && this.get("fields")["group"]["value"].length == 1)
-          {
-              //that.initGroup();
-              _.each(groups.groups, function(group) {
-                  that.get("fields")["group"]["value"].push(group);
-              });
-          }
-      },
+		, getContents: function () {
+			return this.get("fields");
+		}
 
-      removeGroup: function(group)
-      {
-          if("group" in this.get("fields")){
-              var groups = this.get("fields")["group"]["value"];
-              var groupToRemove = _.findWhere(groups, {value: group});
+		/**
+		 * renders the Presentation portion of this snippets XML representation
+		 * @returns {*}  returns the XML as a string
+		 */
+		, renderPresXML: function () {
+			return this.presTemplate({model: this});
+		}
 
-              console.log("Removing group: " + JSON.stringify(groupToRemove));
+		/**
+		 * renders the Dictionary portion of this snippets XML representation
+		 * @returns {*}  returns the XML as a string
+		 */
+		, renderDictXML: function () {
+			return this.dictTemplate({model: this});
+		}
 
-              //if the current selected group is the group to remove, change the group to `none`
-              if(groupToRemove.selected){
-                  _.findWhere(groups, {value: ""}).selected = true;
-              }
-
-              this.get("fields")["group"]["value"] = _.without(groups, groupToRemove);
-          }
-      }
-
-  });
+		/**
+		 * determins the appropriate `type` attribute for the presentation `field` tag
+		 * @returns {String} returns the string `type` attribute
+		 */
+		, getPresType: function () {
+			var that = this;
+			var dataType = this.get("fields").dataType;
+			return dataType.includes("Array") ? _.findWhere(that.arrayTypes, {label: that.get("fields").arrayType}).key : dataType == "Date" ? "datetime" : dataType == "Boolean" ? "checkbox" : "input";
+		}
+	});
 });

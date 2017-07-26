@@ -1,0 +1,104 @@
+<!-- Constraint Modal -->
+<%  var enabled = model.getEnabled();
+    var nullable = model.getNullable();
+    var minSelected = model.getMinSelected();
+    var maxSelected = model.getMaxSelected();
+    var patternSelected = model.getPatternSelected();
+%>
+<div class="modal fade" role="dialog" id="constraintModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Constraints</h4>
+            </div>
+            <div class="modal-body row">
+                <div class="form-horizontal form-group form-inline col-sm-12">
+
+
+                    <div id="constraintsEnableDiv" >
+                        <div class="col-sm-12">
+                            <div id="constraintsUseDiv" class="col-sm-2">
+                                <div class="col-sm-2">
+                                    <span>Selected</span>
+                                    <div class="col-sm-12">
+                                        <div class="pull-right constraintSelectCheckbox">
+                                            <input type="checkbox" id="fieldConstraintsNullable" <%- nullable ? "checked" : "" %>/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 <%if(!model.getMinAvailable()){%>disabled<%}%>">
+                                        <div class="pull-right constraintSelectCheckbox">
+                                            <input type="checkbox" class="" id="constraintMinSelected" <%- minSelected ? "checked" : "" %>/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 <%if(!model.getMaxAvailable()){%>disabled<%}%>">
+                                        <div class="pull-right constraintSelectCheckbox">
+                                            <input type="checkbox" class="" id="constraintMaxSelected" <%- maxSelected ? "checked" : "" %>/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 <%if(!model.getPatternAvailable()){%>disabled<%}%>">
+                                        <div class="pull-right constraintSelectCheckbox">
+                                            <input type="checkbox" class="" id="constraintPatternSelected"<%- patternSelected ? "checked" : "" %>/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-1" style="padding-right: 0px;">
+                                <hr style="width: 1px; height: 230px; margin: 0px 0px 0px 8px; padding-right: 0px;">
+                            </div>
+
+                            <div class="col-sm-9" style="padding-left: 0px;">
+                                <span class="pull-left">Constraint</span>
+                                <div class="col-sm-12 constraintField">
+                                    <div class="col-sm-3">
+                                        <label for="fieldConstraintsNullable" >Nullable</label>
+                                    </div>
+                                    <div class="col-sm-9">
+
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 constraintField <%if(!model.getMinAvailable()){%>disabled<%}%>">
+                                    <div class="col-sm-3">
+                                        <label for="fieldConstraintsMin" class="control-label">Minimum</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input id="fieldConstraintsMin" type="text" class="form-control" value="<%- model.getMin() %>"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 constraintField <%if(!model.getMaxAvailable()){%>disabled<%}%>">
+                                    <div class="col-sm-3">
+                                        <label for="fieldConstraintsMax" class="control-label">Maximum</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input id="fieldConstraintsMax" type="text" class="form-control" value="<%- model.getMax() %>"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 constraintField <%if(!model.getPatternAvailable()){%>disabled<%}%>">
+                                    <div class="col-sm-3">
+                                        <label for="fieldConstraintsPattern" class="control-label">Pattern</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input id="fieldConstraintsPattern" type="text" class="form-control" value="<%- model.getPattern() %>" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="constraintCancel">Close</button>
+                <button type="button" class="btn btn-primary" id="constraintSave">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

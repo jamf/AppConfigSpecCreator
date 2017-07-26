@@ -1,0 +1,33 @@
+<!-- Locale Modal (individual locale) -->
+
+<div class="modal fade" role="dialog" id="localeModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Locale</h4>
+			</div>
+
+			<div class="modal-body row">
+				<div class="form-horizontal form-group form-inline col-sm-12">
+					<label for="localeName" class="col-sm-4 control-label">Language Code</label>
+					<div class="col-sm-6">
+						<input id="localeName" type="text" class="form-control" list="list">
+						<datalist id="list">
+							<% _.each(model.get("localeList"), function(locale) { %>
+								<option value="<%- locale %>"></option>
+							<% }); %>
+						</datalist>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" id="localeCancel">Close</button>
+				<button type="button" class="btn btn-primary" id="localeSave">Save</button>
+			</div>
+
+		</div>
+	</div>
+</div>
