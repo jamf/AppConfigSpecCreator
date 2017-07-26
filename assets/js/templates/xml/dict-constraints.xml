@@ -1,0 +1,2 @@
+<constraints <% if(model.getNullable()) {%>nullable="true"<%}%> <%if(model.getMinAvailable() && model.getMinSelected()){%>min="<%=model.getMin()%>"<%}%> <% if(model.getMaxAvailable() && model.getMaxSelected()) {%>max="<%= model.getMax()%>"<%}%> <% if(model.getPatternAvailable() && model.getPatternSelected()){%>pattern="<%= model.getPattern() %>"<%}%>>
+            </constraints>

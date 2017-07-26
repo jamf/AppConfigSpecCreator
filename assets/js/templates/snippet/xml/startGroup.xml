@@ -1,5 +1,0 @@
-    <fieldGroup>
-        <name>
-            <!-- Language will be the next thing the Spec Creator Tool will support. Only English supported at the moment -->
-            <language value="en-US"><%= name %></language>
-        </name>

@@ -1,87 +1,47 @@
+var snippetQueue = new Array();
+
 define([
-       "jquery" , "underscore" , "backbone"
-       , "collections/snippets" , "collections/my-form-snippets"
-       , "views/tab" , "views/my-form", "views/locale-view", "views/locales-view", "views/groups-view", "views/download-spec-view", "views/import-spec-view"
-       , "models/locale-model", "collections/locales-collection", "models/group"
-       , "text!data/fields.json", "text!templates/app/localization.html", "text!templates/app/render.html",  "text!templates/app/about.html"
-], function(
-  $, _, Backbone
-  , SnippetsCollection, MyFormSnippetsCollection
-  , TabView, MyFormView, LocaleView, LocalesView, AddGroupView, DownloadSpecView, ImportSpecView
-  , Locale, LocalesCollection, GroupModel
-  , fieldsJSON, localizationTab, renderTab
-  , aboutTab
-){
-  return {
-    initialize: function(){
+	"jquery", "underscore", "backbone",
+	"helper/utility",
+	"views/my-form", "collections/snippets", "views/modal/snippet", "models/snippet",
+	"views/modal/groups", "collections/groups", "collections/form-elements",
+	"views/modal/locales", "collections/locales"
+], function ($, _, Backbone, Utility,
+             MyFormView, SnippetsCollection, SnippetModalView, SnippetModel,
+             GroupsModalView, GroupsCollection, FormElementsCollection, LocalesModalView, LocalesCollection) {
+	return {
+		// initialize is called implicitly through backbone but not through require as we are not extending a backbone class
+		initialize: function () {
 
-      //Bootstrap tabs from json.
-      new TabView({
-        title: "Fields"
-        , collection: new SnippetsCollection(JSON.parse(fieldsJSON))
-      });
-      /*new TabView({
-        title: "Localization"
-        , content: localizationTab
-      });
-      new TabView({
-        title: "Rendered"
-        , content: renderTab
-      });*/
-      new TabView({
-        title: "About"
-        , content: aboutTab
-      });
+			// this calls Utility's 'initialize' function
+			new Utility();
 
-      //new AddGroupView({model: new GroupModel});
-      new AddGroupView();
-      new ImportSpecView();
-      new DownloadSpecView();
+			// Groups collection
+			var groupsCollection = new GroupsCollection();
+			// Locales collection
+			var localesCollection = new LocalesCollection();
 
-      //Make the first tab active!
-      $("#components .tab-pane").first().addClass("active");
-      $("#formtabs li").first().addClass("active");
-      // Bootstrap "My Form" with 'Form Name' snippet.
-      new MyFormView({
-        title: "Original"
-        , collection: new MyFormSnippetsCollection([
-          { "title" : "Form Name"
-            , "fields": {
-              "bundleId": {
-                "label"   : "Bundle Id"
-                , "type"    : "input"
-                , "value"   : "com.mycompany.app"
-              },
-              "version": {
-                "label"   : "Version"
-                , "type"    : "input"
-                , "value"   : "1"
-              }
-            }
-          }
-        ])
-      });
+			var formView = new MyFormView({collection: new FormElementsCollection()});
+			formView.setGroupCollection(groupsCollection);
+			formView.setLocalesCollection(localesCollection);
+			formView.render();
 
-      var popoverHTML = '<div id=localeInput></div>';
+			//when we click the "add field" button. create a new modal view with new model
+			$("#addFieldButton").on("click", function () {
+				new SnippetModalView({model: (new SnippetModel().setGroupsCollection(groupsCollection)).setLocalesCollection(localesCollection)}); // model is a field owned by Backbone.view
+			});
 
-      $('#editLanguagesButton').attr("data-content", popoverHTML);
-      $('#editLanguagesButton').popover({ html : true }); 
+			//when we click the "groups" button, show the groups view
+			$("#groupsButton").on("click", function () {
+				groupsCollection.setLocalesCollection(localesCollection);
+				new GroupsModalView({collection: groupsCollection});
+			});
 
-      $('#editLanguagesButton').on('shown.bs.popover', function () {
-        var locale1 = new Locale({ value: "en-US" });
-        var locale2 = new Locale({ value: "fr-FR" });
-        var locales = new LocalesCollection([locale1, locale2]);
-        var localesView = new LocalesView({ collection: locales });
-      });
+			// when we click the "Localization" button. show the locales view
+			$("#localeButton").on("click", function () {
+				new LocalesModalView({collection: localesCollection});
+			});
+		}
 
-      // Handle click events
-      $('html').on('click', function(e) {
-        if (typeof $(e.target).data('original-title') == 'undefined' &&
-           !$(e.target).parents().is('.popover.in') &&
-           (typeof $(e.target).attr("class") == 'undefined' || !$(e.target).attr("class").includes("languageRemovalButton"))) {
-           $('#editLanguagesButton').popover('hide');
-        }
-      });
-    }
-  }
+	}
 });

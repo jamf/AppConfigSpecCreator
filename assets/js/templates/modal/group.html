@@ -1,0 +1,39 @@
+<!-- Group Modal  -individual group- -->
+
+<div class="modal fade" role="dialog" id="groupModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Field Group</h4>
+            </div>
+            <div class="modal-body row">
+
+                <!--Locale list-->
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="fieldLocale" class="col-sm-4 control-label">Locale</label>
+                    <div class="col-sm-6">
+                        <select id="fieldLocale" class="form-control">
+                            <option>en-US</option>
+                            <% model.localesCollection.each( function(locale) { %>
+                            <option><%- locale.get("name") %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="groupName" class="col-sm-4 control-label">Name</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="groupName" placeholder="Name" value="<%- model.get("name")%>"/>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="groupCancel">Close</button>
+                <button type="button" class="btn btn-primary" id="groupSave">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

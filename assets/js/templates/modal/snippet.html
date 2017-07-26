@@ -1,0 +1,140 @@
+<!-- Snippet Modal -->
+<%
+    var fields = model.get("fields");
+    //Make sure variables aren't undefined
+    if(typeof fields.name === "undefined") { fields.name = "" }
+    if(typeof fields.label === "undefined") { fields.label = "" }
+    if(typeof fields.description === "undefined") {fields.description = ""}
+    if(typeof fields.dataType === "undefined") {fields.dataType = "Integer"}
+%>
+<div class="modal fade" role="dialog" id="snippetModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">New Field</h4>
+            </div>
+            <div class="modal-body row">
+                <!-- Snippet Fields -->
+
+
+                <!--Locale list-->
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="fieldGroup" class="col-sm-4 control-label">Locale</label>
+                    <div class="col-sm-6">
+                        <select id="fieldLocale" class="form-control">
+                            <option>en-US</option>
+                            <%  model.localesCollection.each( function(locale) { %>
+                            <option><%- locale.get("name") %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="fieldKeyName" class="col-sm-4 control-label">Key Name</label>
+                    <div class="col-sm-6">
+                        <input type="text" id="fieldKeyName" class="form-control" placeholder="Name" value="<%- fields.name %>"/>
+                    </div>
+                </div>
+
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="fieldLabel" class="col-sm-4 control-label">Label</label>
+                    <div class="col-sm-6">
+                        <input type="text" id="fieldLabel" class="form-control" placeholder="Label" value="<%- fields.label.getLocalizedValue('en-US') %>"/>
+                    </div>
+                </div>
+
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="fieldDataType" class="col-sm-4 control-label">Data Type</label>
+                    <div class="col-sm-6">
+                        <select id="fieldDataType" class="form-control">
+                            <% _.each(model.dataTypes, function(type){ %>
+                            <option <%if(fields.dataType == type.label) {%>selected<%}%>><%- type.label %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-horizontal form-group form-inline col-sm-12" id="fieldArrayTypeDiv" hidden>
+                    <label for="fieldArrayType" class="col-sm-4 control-label">Array Type</label>
+                    <div class="col-sm-6">
+                        <select id="fieldArrayType" class="form-control">
+                            <% _.each(model.arrayTypes, function(type){ %>
+                            <option><%- type.label %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-horizontal form-group form-inline col-sm-12" id="fieldArrayOptionsDiv" hidden>
+                    <label for="fieldArrayOptions" class=" col-sm-4 control-label">Array Elements</label>
+                    <div class="col-sm-6">
+                        <div class="form-control multiselect" id="">
+                            <ul class="list-group" id="fieldArrayOptions">
+                                <!--Array options will be templated here -->
+
+
+                            </ul>
+                        </div>
+                        <div class="btn-group pull-right">
+                            <button type="button" class="btn btn-xs btn-default" id="fieldArrayOptionsAdd" data-array="arrayOptions"><span class="glyphicon glyphicon-plus"></span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-horizontal form-group form-inline col-sm-12" id="fieldDefaultValueTypeDiv" <%if(!fields.dataType.includes("String")){%>hidden<%}%>>
+                    <label for="fieldDefaultValueType" class="col-sm-4 control-label">Default Value Type</label>
+                    <div class="col-sm-6">
+                        <select id="fieldDefaultValueType" class="form-control">
+                            <% _.each(model.variableTypes, function(type) { %>
+                            <option <%if(type.label == fields.defaultValue.get("type")) { %>selected<%}%>><%- type.label %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="fieldDefaultValueAnchor" class="col-sm-4 control-label">Default Value</label>
+                    <div class="col-sm-6" id="fieldDefaultValueAnchor">
+                        <!-- Default Value templated here -->
+
+                    </div>
+                </div>
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="fieldDescription" class="col-sm-4 control-label">Description</label>
+                    <div class="col-sm-6">
+                        <input type="text" id="fieldDescription" class="form-control" placeholder="Description" value="<%- fields.description.getLocalizedValue('en-US') %>"/>
+                    </div>
+                </div>
+
+
+                <!-- Constraints -->
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="fieldConstraints" class="col-sm-4 control-label">Constraints</label>
+                    <div id="fieldConstraints" class="col-sm-6">
+
+                    </div>
+                </div>
+                <!-------------->
+
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="fieldGroup" class="col-sm-4 control-label">Field Group</label>
+                    <div class="col-sm-6">
+                        <select id="fieldGroup" class="form-control">
+                            <option>-- none --</option>
+                        <%  model.groupsCollection.each( function(group) { %>
+                            <option><%- group.get("name") %></option>
+                        <% }); %>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="fieldCancel">Close</button>
+                <button type="button" class="btn btn-primary" id="fieldSave">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

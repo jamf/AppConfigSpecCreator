@@ -1,0 +1,3 @@
+		<<%= _.findWhere(model.dataTypes, {label: model.get("fields").dataType}).key %> keyName="<%- model.get("fields").name %>"><%= model.get("fields").defaultValue.renderDictXML() %><%if(model.get("fields").constraints.getEnabled())
+				{%><%=model.get("fields").constraints.renderDictXML() %><%}%>
+		</<%= _.findWhere(model.dataTypes, {label: model.get("fields").dataType}).key %>>

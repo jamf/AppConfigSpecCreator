@@ -1,0 +1,15 @@
+		<% var dataType = model.get("fields").dataType; %><field keyName="<%= model.get("fields").name %>" type="<%= model.getPresType()%>"><% if(model.get("fields").label != "") { %>
+			<label>
+				<language value="en-US"><%= model.get("fields").label.getLocalizedValue("en-US") %></language><% if (model.localesCollection.size() > 0) { model.localesCollection.each( function(locale) { %>
+				<language value="<%- locale.get("name") %>"><%- model.get("fields").label.getLocalizedValue(locale.get("name")) %></language><% }); } %>
+			</label><% } if(model.get("fields").description != "") { %>
+			<description>
+				<language value="en-US"><%= model.get("fields").description.getLocalizedValue("en-US") %></language><% if (model.localesCollection.size() > 0) { model.localesCollection.each( function(locale) { %>
+				<language value="<%- locale.get("name") %>"><%- model.get("fields").description.getLocalizedValue(locale.get("name")) %></language><% }); } %>
+			</description><% } if (dataType.includes("Array")) { %>
+			<options><% model.get("fields").options.each( function(option) { %>
+				<option value="<%= option.get("value") %>" <% if(option.get("value") == model.get("fields").defaultValue.value) { %>selected="true"<% } %>>
+					<language value="en-US"><%= option.get("value") %></language>
+				</option><% }); %>
+			</options><% } %>
+		</field>

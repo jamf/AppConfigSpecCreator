@@ -1,54 +1,102 @@
-// model/group.js aka GroupModel
+//models/group
 define([
-      'jquery', 'underscore', 'backbone',
-      'helper/pubsub'
-], function($, _, Backbone, PubSub) {
+		"jquery", "underscore", "backbone",
+		"collections/snippets", "models/form-element",
+		"text!templates/xml/start-group.xml",
+		"text!templates/xml/end-group.xml",
+		"models/localized-value"
+	],
+	function ($, _, Backbone,
+	          SnippetsCollection, FormElementModel,
+	          StartGroupTemplate,
+	          EndGroupTemplate,
+	          LocalizedValueModel) {
+		return FormElementModel.extend({
 
-    return Backbone.Model.extend({
-        initialize: function (name) {
-            //this.groups = [];
-            //PubSub.on("requestGroupModel", this.modelRequest, this);
-            this.encode(name);
-        },
+			type: "group",
+			startTemplate: _.template(StartGroupTemplate),
+			endTemplate: _.template(EndGroupTemplate),
 
-        encode: function(name)
-        {
-            var encoded = "";
-            //encode the group name with ascii values with hyphens between character values
-            for(var i = 0; i < name.length; i++)
-            {
-                encoded += name.charCodeAt(i);
-                encoded += "-";
-            }
+			// groups are identified only by their name. in order for things not to get too complicated,
+			// the snippets that belong to them are linked via their english (en-US) name.
+			initialize: function (name) {
+				//Create a snippet collection for this
+				this.collection = new SnippetsCollection();
 
-            //remove the last hyphen
-            encoded = encoded.substring(0, encoded.length - 1);
+				this.localizedName = new LocalizedValueModel(); // localized group name
+				this.setName(name);
+			}
 
-            this.value = encoded;
-            this.label = name;
-            this.selected = false;
-        }
-        ,getJSON: function()
-        {
-            return {value: this.value, label: this.label, selected: false};
-        }
+			, setLocalesCollection: function (collection) {
+				this.localesCollection = collection;
+				return this;
+			}
 
-        ,removeGroup: function (groupName) {
-            this.groups = _.without(this.groups, _.findWhere(this.groups, {"label": groupName}));
+			, getLocalesCollection: function () {
+				return this.localesCollection;
+			}
 
-            PubSub.trigger("removeGroup", groupName);
-            PubSub.trigger("setGroups");
-        },
+			// save temporary localized name data
+			, saveLocaleData: function (localeNameData) {
+				this.localizedName = localeNameData;
+				this.setName(localeNameData.getLocalizedValue("en-US"));
+			}
 
-        clearGroups: function()
-        {
-            this.groups = [];
-        },
+			/**
+			 * Set the name of the group
+			 * @param name  the name to set
+			 */
+			, setName: function (name) { // set the identifying name of the group to the english (en-US) value
+				this.localizedName.setLocalizedValue("en-US", name);
+				this.set("name", this.localizedName.getLocalizedValue("en-US"));
+			}
 
-        modelRequest: function(requester)
-        {
-            requester.setGroupModel(this);
-        }
+			, isGroup: function () {
+				return true;
+			}
 
-    });
-});
+			, add: function (snippet) {
+				this.collection.add(snippet);
+			}
+
+			, insertAt: function (snippet, index) {
+				this.collection.insertAt(snippet, index);
+			}
+
+			, getContents: function () {
+				return this.get("name");
+			}
+
+			/**
+			 * Renders the xml of this group
+			 * @returns {string}  the xml representation of this group
+			 */
+			, renderXML: function () {
+				var xml = "<group>\n"
+				this.collection.each(function (snippet) {
+					xml += snippet.renderXML();
+				});
+				xml += "</group>\n";
+				return xml;
+			}
+
+			, renderDictXML: function () {
+				var xml = "";
+				this.collection.each(function (snippet) {
+					xml += snippet.renderDictXML();
+				});
+				return xml;
+			}
+
+			, renderPresXML: function () {
+				var xml = this.startTemplate({model: this});
+
+				this.collection.each(function (snippet) {
+					xml += snippet.renderPresXML();
+				});
+
+				xml += this.endTemplate();
+				return xml;
+			}
+		});
+	});

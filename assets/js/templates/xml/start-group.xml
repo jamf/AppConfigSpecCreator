@@ -1,0 +1,5 @@
+	<fieldGroup>
+		<name>
+			<language value="en-US"><%- model.localizedName.getLocalizedValue("en-US") %></language><% if (model.localesCollection.size() > 0) { model.localesCollection.each( function(locale) { %>
+			<language value="<%- locale.get("name") %>"><%- model.localizedName.getLocalizedValue(locale.get("name")) %></language><% }); } %>
+		</name>
