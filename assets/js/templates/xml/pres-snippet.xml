@@ -6,10 +6,11 @@
 			<description>
 				<language value="en-US"><%= model.get("fields").description.getLocalizedValue("en-US") %></language><% if (model.localesCollection.size() > 0) { model.localesCollection.each( function(locale) { %>
 				<language value="<%- locale.get("name") %>"><%- model.get("fields").description.getLocalizedValue(locale.get("name")) %></language><% }); } %>
-			</description><% } if (dataType.includes("Array")) { %>
+			</description><% } if (dataType.includes("Array") && model.get("fields").options.length > 0) { %>
 			<options><% model.get("fields").options.each( function(option) { %>
 				<option value="<%= option.get("value") %>" <% if(option.get("value") == model.get("fields").defaultValue.value) { %>selected="true"<% } %>>
-					<language value="en-US"><%= option.get("value") %></language>
+					<language value="en-US"><%- option.localizedLabel.getLocalizedValue("en-US") %></language><% if (model.localesCollection.size() > 0) { model.localesCollection.each( function(locale) { %>
+					<language value="<%- locale.get("name") %>"><%- option.localizedLabel.getLocalizedValue(locale.get("name")) %></language><% }); } %>
 				</option><% }); %>
 			</options><% } %>
 		</field>

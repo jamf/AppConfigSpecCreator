@@ -19,5 +19,14 @@ define([
        {
            new ArrayOptionsView({collection: this}).render();
        }
+
+        , setLocalesCollection: function (collection) {
+            this.localesCollection = collection;
+            return this;
+        }
+
+        , getLocalesCollection: function () {
+            return this.localesCollection;
+        }
    });
 });

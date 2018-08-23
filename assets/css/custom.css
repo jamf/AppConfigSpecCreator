@@ -164,6 +164,33 @@ ul {
     z-index: 9999;
 }
 
+#snippetModal {
+    z-index: 5000;
+}
+
+#constraintModal {
+    z-index: 6000;
+}
+
 li {
     list-style: none;
+}
+
+#checkboxValueText {
+    margin-left: 20px;
+}
+
+.glyphicon-menu-hamburger {
+    line-height: inherit;
+}
+
+.form-snippet-hamburger-div .glyphicon-remove {
+    display: none;
+    float: left;
+    line-height: inherit;
+    margin: 0 5px;
+}
+
+.form-snippet:hover .glyphicon-remove {
+    display: block;
 }

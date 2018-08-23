@@ -15,6 +15,10 @@ define([
             this.render();
 
             $("#bundleVersionModal").modal("show");
+
+            this.$el.on("shown.bs.modal", function () {
+                $("#bundleId").focus();
+            });
         }
 
         ,render: function()
@@ -26,7 +30,17 @@ define([
 
         ,events: {
             "click #bundleVersionSave" : "saveHandler",
-            "click #bundleVersionCancel" : "cancelHandler"
+            "click #bundleVersionCancel" : "cancelHandler",
+            "keydown": "keyAction"
+        }
+
+        , keyAction: function(e) {
+            var code = e.keyCode || e.which;
+            if (code == 27) {
+              this.cancelHandler(e);
+            } else if (code == 13) {
+              this.saveHandler(e);
+            }
         }
 
         ,saveHandler: function()

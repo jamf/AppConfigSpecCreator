@@ -10,8 +10,7 @@ the same but with the `groups` button. Fields and groups can be reordered by dra
 If you wish to load a previously or externally created spec, use the `import` button. NOTE: importing erases the currently created
 spec in your form. 
 
-Some functionality has yet to be completed. Constraints have yet to support specific values and localization support is not
-created.
+Some functionality has yet to be completed. Localization support is not available for all portions of the schema.
 
 Navigating the code base
 ------------------------

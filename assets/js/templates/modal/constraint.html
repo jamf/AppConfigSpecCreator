@@ -88,6 +88,25 @@
                                         <input id="fieldConstraintsPattern" type="text" class="form-control" value="<%- model.getPattern() %>" />
                                     </div>
                                 </div>
+
+                                <div class="col-sm-12 constraintField" id="constraintListDiv">
+
+                                    <div class="col-sm-3">
+                                        <label for="fieldConstraintValues" class="control-label">Values</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <div class="form-control multiselect" id="">
+                                            <ul class="list-group" id="fieldConstraintValues">
+                                                <!--constraint element value list will be templated here -->
+
+
+                                            </ul>
+                                        </div>
+                                        <div class="btn-group pull-right">
+                                            <button type="button" class="btn btn-xs btn-default" id="fieldConstraintValuesAdd" data-array="arrayOptions"><span class="glyphicon glyphicon-plus"></span></button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>

@@ -1,2 +1,6 @@
-<constraints <% if(model.getNullable()) {%>nullable="true"<%}%> <%if(model.getMinAvailable() && model.getMinSelected()){%>min="<%=model.getMin()%>"<%}%> <% if(model.getMaxAvailable() && model.getMaxSelected()) {%>max="<%= model.getMax()%>"<%}%> <% if(model.getPatternAvailable() && model.getPatternSelected()){%>pattern="<%= model.getPattern() %>"<%}%>>
-            </constraints>
+
+			<constraint<% if(model.getNullable()) {%> nullable="true"<%}%><%if(model.getMinAvailable() && model.getMinSelected()){%> min="<%=model.getMin()%>"<%}%><% if(model.getMaxAvailable() && model.getMaxSelected()) {%> max="<%= model.getMax()%>"<%}%><% if(model.getPatternAvailable() && model.getPatternSelected()){%> pattern="<%= model.getPattern() %>"<%}%>><% if (model.getValuesCollection().models.length > 0) { %>
+				<values><% model.getValuesCollection().each(function(element) { %>
+					<value><%= element.get("value") %></value><% }) %>
+				</values><% } %>
+			</constraint>

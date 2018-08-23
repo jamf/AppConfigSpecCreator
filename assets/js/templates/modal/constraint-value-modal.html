@@ -1,0 +1,25 @@
+<!-- Array Element Modal -->
+
+<div class="modal fade" role="dialog" id="arrayElementModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">New Constraint Value</h4>
+			</div>
+			<div class="modal-body row">
+				<div class="form-horizontal form-group form-inline col-sm-12">
+					<label for="elementValue" class="col-sm-4 control-label">Value</label>
+					<div class="col-sm-6" id="elementValueDiv">
+						<!-- user and device variables in a select go here -->
+						<!-- <input type="text" id="elementValue" class="form-control" placeholder="value" value="<%- model.get("value") %>"/> -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" id="elementCancel">Close</button>
+				<button type="button" class="btn btn-primary" id="elementSave">Save</button>
+			</div>
+		</div>
+	</div>
+</div>

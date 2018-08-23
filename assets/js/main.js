@@ -18,6 +18,9 @@ require.config({
         },
         'knockout': {
             exports: 'ko'
+        },
+        'xmllint': {
+            exports: 'xmllint'
         }
     }
     , paths: {

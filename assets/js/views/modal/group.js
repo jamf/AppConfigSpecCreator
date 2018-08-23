@@ -16,6 +16,9 @@ define([
 
 			$("#groupModal").modal("show");
 
+			this.$el.on("shown.bs.modal", function () {
+				$("#groupName").focus();
+			});
 		}
 
 		, render: function () {
@@ -27,7 +30,17 @@ define([
 		, events: {
 			"click #groupSave": "saveHandler",
 			"click #groupCancel": "cancelHandler",
-			"change #fieldLocale": "localeSelectionChanged"
+			"change #fieldLocale": "localeSelectionChanged",
+			"keydown": "keyAction"
+		}
+
+		, keyAction: function(e) {
+			var code = e.keyCode || e.which;
+			if (code == 27) {
+				this.cancelHandler(e);
+			} else if (code == 13) {
+				this.saveHandler(e);
+			}
 		}
 
 		// when locale dropdown changes, show localized value according to selection in the form field

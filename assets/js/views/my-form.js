@@ -8,7 +8,13 @@ define([
 	"text!templates/xml/end-pres.xml",
 	"text!templates/xml/end-spec.xml",
 	"models/localized-value",
-	"models/locale", "jquery-ui"
+	"models/constraint-value",
+	"models/locale",
+	"xmllint",
+	"models/errors",
+	"views/modal/errors",
+	"text!templates/xml/appconfigschema.xsd",
+	"jquery-ui"
 ], function ($, _, Backbone, PubSub, DataTypes,
              SnippetView, GroupView, BundleVersionModel, BundleVersionView,
              SnippetModel, GroupModel, ArrayOptionModel,
@@ -17,7 +23,12 @@ define([
              EndPresTemplate,
              EndSpecTemplate,
              LocalizedValueModel,
-             LocaleModel){
+             ConstraintValueModel,
+             LocaleModel,
+             xmllint,
+             ErrorsModel,
+             ErrorsModalView,
+             AppConfigSchema){
 
 	return Backbone.View.extend({
 
@@ -198,21 +209,33 @@ define([
 			xml += EndSpecTemplate;
 
 
-			var pom = document.createElement('a');
-
 			var filename = "specfile.xml";
 			var pom = document.createElement('a');
 			var bb = new Blob([xml], {type: 'text/plain'});
 
 			pom.setAttribute('href', window.URL.createObjectURL(bb));
 			pom.setAttribute('download', filename);
-
 			pom.dataset.downloadurl = ['text/plain', pom.download, pom.href].join(':');
 			pom.draggable = true;
 			pom.classList.add('dragout');
 
-			pom.click();
+			let lint = xmllint.validateXML({
+				xml: xml,
+				schema: AppConfigSchema
+			});
 
+			var errors = lint.errors;
+			if (errors != null && errors.length > 0) {
+				console.log(lint);
+
+				new ErrorsModalView({
+					model: new ErrorsModel(errors, xml)
+				});
+
+			} else {
+				var event = new MouseEvent('click');
+				pom.dispatchEvent(event); // pom.click() does not work in all browsers
+			}
 		}
 
 		/**
@@ -224,7 +247,7 @@ define([
 			this.collection.reset();
 
 			//reset the bundle id and version
-			this.bundleVersion.setFields("com.mycompany.app", "1.0.0");
+			this.bundleVersion.setFields("com.mycompany.app", "1");
 
 			//initialize the form from the xml
 			this.initForm(xml);
@@ -236,6 +259,7 @@ define([
 		, initForm: function (xml) {
 			var that = this;
 
+			xml = xml.replace(/^\s*/gm, ""); // remove indentations with spaces as it breaks importing
 			xmlDoc = $.parseXML(xml.replace(/(\r\n|\n|\r|\t)/gm, "")),
 				$xml = $(xmlDoc),
 				$title = $xml.find('dict');
@@ -246,12 +270,16 @@ define([
 				if (this.constructor == Array) {
 					$.each(this, function () {
 						this.dataType = dataType;
-						dictSections[this["@attributes"].keyName] = this;
+						if(this.dataType != "#comment") { // don't accidentally try and import comments
+							dictSections[this["@attributes"].keyName] = this;
+						}
 					});
 				} else {
 					// Preload dict sections in a dictionary indexed by keyName
 					this.dataType = dataType;
-					dictSections[this["@attributes"].keyName] = this;
+					if(this.dataType != "#comment") { // don't accidentally try and import comments
+						dictSections[this["@attributes"].keyName] = this;
+					}
 				}
 			});
 
@@ -312,6 +340,8 @@ define([
 						_.each(obj, function (snippet) {
 							//configure and add the snippet
 							that.configureSnippets(snippet, localizedGroupName.getLocalizedValue("en-US"), dictSections);
+							// remove snippet from dictSections after import
+							delete dictSections[snippet["@attributes"].keyName];
 						});
 					});
 				});
@@ -326,8 +356,16 @@ define([
 			}
 
 			jQuery.map(fields, function (field) {
-
 				that.configureSnippets(field, null, dictSections);
+				// remove snippet from dictSections after import
+				delete dictSections[field["@attributes"].keyName];
+			});
+
+			// import snippets that do not have presentation elements
+			_.each(dictSections, function(dictElement) {
+				// dictElement = single element from leftover dictSections used as field
+				// reference in order to grab the key name in configureSnippets function
+				that.configureSnippets(dictElement, null, dictSections)
 			});
 		}
 
@@ -340,11 +378,14 @@ define([
 		, configureSnippets: function (field, group, dictSections) {
 			var that = this;
 
-			var model = new SnippetModel().setGroupsCollection(this.groupsCollection).setLocalesCollection(this.localesCollection);
+			var model = new SnippetModel()
+				.setGroupsCollection(this.groupsCollection)
+				.setLocalesCollection(this.localesCollection);
+
 
 			var fields = model.get("fields");
 			var dict = dictSections[field["@attributes"].keyName];
-			var constraints = dict.constraints;
+			var constraints = dict.constraint;
 
 			//set the fields for the model from the xml
 			if (typeof field["@attributes"].keyName !== 'undefined') {
@@ -396,6 +437,10 @@ define([
 					PubSub.trigger("LocaleAdd", localeModel);
 				});
 			}
+
+			if (field["@attributes"].type == "hidden") {
+				fields.hidden = true;
+			}
 			fields.dataType = _.findWhere(DataTypes, {key: dict.dataType}).label  // <-- This works because the "key" is set earlier in the initForm function
 
 			//set the default value(s)
@@ -411,69 +456,180 @@ define([
 							dict.defaultValue[key].push(old);
 						}
 						_.each(dict.defaultValue[key], function (value) {
-
-							var model = new ArrayOptionModel();
+							var m = new ArrayOptionModel();
 							//If we have an emm variable, the value is an xml attribute
 							if (key.includes("Variable")) {
 								//only grab the prefix (user,device) from the variable key since its the key we use in our variables JSON object
 								var variableKey = key.substring(0, key.indexOf("Variable"));
 								//Grab the label from the specified variable as defined in our variables JSON object and set it as the model's value
-								model.set({"value": _.findWhere(model.emmVariables[variableKey], {key: dict.defaultValue[key]["@attributes"].value}).label});
+								m.set({"value": _.findWhere(m.emmVariables[variableKey], {key: value["@attributes"].value}).label});
 								//set the type of the model, NOTE: we only have to do that if it's a variable because it defaults to a Literal.
-								model.type = _.findWhere(model.variableTypes, {key: key}).label;
+								m.type = _.findWhere(m.variableTypes, {key: key}).label;
 							} else {
 								//Just set the value
-								model.set({value: value["#text"]});
+								m.set({value: value["#text"]});
 							}
 							//Set the model as fresh since we are automatically adding it to the collection
-							model.fresh = false;
+							m.fresh = false;
 							//add the model to the collection
-							fields.defaultValue.collection.add(model);
+							fields.defaultValue.collection.add(m);
 						});
+
+						fields.defaultValue.collection.collectionType = "defaultValue";
 					});
-				}
-				else {
-					//else assign the singular value
-					fields.defaultValue.set({"value": dict.defaultValue.value["#text"]});
+				} else {
+					var key = "";
+					if (dict.defaultValue.userVariable !== undefined) {
+						key = "userVariable";
+					} else if (dict.defaultValue.deviceVariable !== undefined) {
+						key = "deviceVariable";
+					}
+
+					if (key.includes("Variable")) {
+						//only grab the prefix (user,device) from the variable key since its the key we use in our variables JSON object
+						var variableKey = key.substring(0, key.indexOf("Variable"));
+
+						//Grab the label from the specified variable as defined in our variables JSON object and set it as the model's value
+						let v = _.findWhere(fields.defaultValue.emmVariables[variableKey], {key: dict.defaultValue[key]["@attributes"].value});
+						fields.defaultValue.set({"value": v.label});
+
+						//set the type of the model, NOTE: we only have to do that if it's a variable because it defaults to a Literal.
+						let t = _.findWhere(model.variableTypes, {key: key});
+						// fields.defaultValue.type = t.label;
+						fields.defaultValue.attributes.type = t.label;
+					} else {
+						//else assign the singular value
+						fields.defaultValue.set({"value": dict.defaultValue.value["#text"]});
+					}
 				}
 			}
 
-			if (typeof field.options !== 'undefined') {
-				_.each(field.options.option, function (option) {
-					var model = new ArrayOptionModel();
-					model.set({"value": option["@attributes"].value});
-					model.fresh = false;
-					fields.options.add(model);
-				});
+			// array options
+			if (typeof field.options !== 'undefined'
+				&& typeof field.options.option !== 'undefined')
+			{ // snippet has multiple options
+				if (field.options.option instanceof Array) {
+					_.each(field.options.option, function (option) {
+						var m = new ArrayOptionModel();
+						m.setLocalesCollection(that.getLocalesCollection())
+
+						if (typeof(option["@attributes"]) !== "undefined") {
+							m.set({"value": option["@attributes"].value});
+						}
+
+						// iterate through languages and set locale values
+						if (option.language instanceof Array) { // options have multiple localizations
+							_.each(option.language, function (lang) {
+								var locale = lang["@attributes"].value;
+								var value = lang["#text"];
+								m.localizedLabel.setLocalizedValue(locale, value);
+
+								// import global locales
+								var localeModel = new LocaleModel(locale);
+								PubSub.trigger("LocaleAdd", localeModel);
+							});
+
+						} else { // options have one localization value
+							var lang = option.language;
+							var locale = lang["@attributes"].value;
+							var value = lang["#text"];
+							m.localizedLabel.setLocalizedValue(locale, value);
+
+							// import global locales
+							var localeModel = new LocaleModel(locale);
+							PubSub.trigger("LocaleAdd", localeModel);
+						}
+
+						m.fresh = false;
+						fields.options.add(m);
+					});
+				} else { // snippet has one option
+					var option = field.options.option;
+					var m = new ArrayOptionModel();
+					m.setLocalesCollection(that.getLocalesCollection())
+
+					if (typeof(option["@attributes"]) !== "undefined") {
+						m.set({"value": option["@attributes"].value});
+					}
+
+					// iterate through languages and set locale values
+					if (option.language instanceof Array) { // option has multiple localizations
+						_.each(option.language, function (lang) {
+							var locale = lang["@attributes"].value;
+							var value = lang["#text"];
+							m.localizedLabel.setLocalizedValue(locale, value);
+
+							// import global locales
+							var localeModel = new LocaleModel(locale);
+							PubSub.trigger("LocaleAdd", localeModel);
+						});
+
+					} else { // option has one localization value
+						var lang = option.language;
+						var locale = lang["@attributes"].value;
+						var value = lang["#text"];
+						m.localizedLabel.setLocalizedValue(locale, value);
+
+						// import global locales
+						var localeModel = new LocaleModel(locale);
+						PubSub.trigger("LocaleAdd", localeModel);
+					}
+
+					m.fresh = false;
+					fields.options.add(m);
+				}
+
+				fields.options.collectionType = "arrayElement"
 			}
 
 			//constraints
 			if (typeof constraints !== 'undefined') {
 				var constr = model.get("fields").constraints;
 				console.log("constraints: " + JSON.stringify(constraints));
-				var nullable = constraints["@attributes"].nullable;
-				var min = constraints["@attributes"].min;
-				var max = constraints["@attributes"].max;
-				var pattern = constraints["@attributes"].pattern;
 
-				if (typeof nullable !== 'undefined' && nullable == "true") {
-					constr.setNullable(true);
-					constr.setNullableSelected(true);
+				try {
+					var nullable = constraints["@attributes"].nullable;
+					var min = constraints["@attributes"].min;
+					var max = constraints["@attributes"].max;
+					var pattern = constraints["@attributes"].pattern;
+
+					if (typeof nullable !== 'undefined' && nullable == "true") {
+						constr.setNullable(true);
+						constr.setNullableSelected(true);
+					}
+
+					if (typeof min !== 'undefined') {
+						constr.setMin(min);
+						constr.setMinSelected(true);
+					}
+
+					if (typeof max !== 'undefined') {
+						constr.setMax(max);
+						constr.setMaxSelected(true);
+					}
+
+					if (typeof pattern !== 'undefined') {
+						constr.setPattern(pattern);
+						constr.setPatternSelected(true);
+					}
+				} catch(error) {
+					// error when reading constraint attributes if none exist
+					// console.error(error);
 				}
 
-				if (typeof min !== 'undefined') {
-					constr.setMin(min);
-					constr.setMinSelected(true);
-				}
+				if (typeof constraints.values !== 'undefined'
+					&& typeof constraints.values.value !== 'undefined')
+				{
+					var values = constraints.values.value;
 
-				if (typeof max !== 'undefined') {
-					constr.setMax(max);
-					constr.setMaxSelected(true);
-				}
-
-				if (typeof pattern !== 'undefined') {
-					constr.setPattern(pattern);
-					constr.setPatternSelected(true);
+					var valuesCollection = constr.getValuesCollection();
+					for (var i = 0; i < values.length; i++) {
+						var value = values[i]["#text"];
+						var valueModel = new ConstraintValueModel();
+						valueModel.set("value", value);
+						valuesCollection.add(valueModel);
+					}
+					constr.setValuesCollection(valuesCollection);
 				}
 
 				//make sure we have the right data type

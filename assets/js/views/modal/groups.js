@@ -48,7 +48,15 @@ define([
 
         ,events: {
             "click #groupsAdd" : "addGroup",
-            "click #groupsCancel": "cancelHandler"
+            "click #groupsCancel": "cancelHandler",
+            "keydown": "keyAction"
+        }
+
+        , keyAction: function(e) {
+            var code = e.keyCode || e.which;
+            if (code == 27) {
+              this.cancelHandler(e);
+            }
         }
 
         ,addGroup: function()

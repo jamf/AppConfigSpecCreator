@@ -1,7 +1,9 @@
-<% /*The EJS in this file is so confusingly condensed to assist the look of the XML that is rendered (no unnecessary new lines, white spaces, etc) */  if(!model.snippetModel.get("fields").dataType.includes("Array") && model.get("value") != "" || model.snippetModel.get("fields").dataType.includes("Array") && model.collection.models.length > 0) { %>
-			<defaultValue><% if(model.snippetModel.get("fields").dataType.includes("Array")) { model.collection.each(function(element) { if(element.type == "User Variable") { %>
+<% if(!model.snippetModel.get("fields").dataType.includes("Array") && model.get("value") != "" && typeof(model.get("value")) !== "undefined" || model.snippetModel.get("fields").dataType.includes("Array") && model.collection.models.length > 0) { %>
+			<defaultValue><% if(model.snippetModel.get("fields").dataType.includes("Array") || model.snippetModel.get("fields").defaultValue.attributes.type == "User Variable" || model.snippetModel.get("fields").defaultValue.attributes.type == "Device Variable") { %><% if(model.snippetModel.get("fields").defaultValue.attributes.type == "User Variable") { %>
+				<userVariable value="<%= _.findWhere(model.snippetModel.get("fields").defaultValue.emmVariables.user, {label: model.get("value")}).key %>" /><% } else if (model.snippetModel.get("fields").defaultValue.attributes.type == "Device Variable") { %>
+				<deviceVariable value="<%= _.findWhere(model.snippetModel.get("fields").defaultValue.emmVariables.device, {label: model.get("value")}).key %>" /><% } %><%	model.collection.each(function(element) { %><% if(element.type == "User Variable") { %>
 				<userVariable value="<%= _.findWhere(element.emmVariables.user, {label: element.get("value")}).key %>" /><% } else if (element.type == "Device Variable") { %>
 				<deviceVariable value="<%= _.findWhere(element.emmVariables.device, {label: element.get("value")}).key %>" /><% } else {%>
-				<value><%- element.get("value") %></value><% }})} else { %>
+				<value><%- element.get("value") %></value><% } %><% }) %><% } else { %>
 				<value><%- model.get("value") %></value><% }%>
 			</defaultValue><% } %>
