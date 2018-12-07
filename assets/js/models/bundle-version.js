@@ -12,7 +12,7 @@ define([
 
         initialize: function()
         {
-            this.set("fields", {bundle: "com.mycompany.app", version: "1.0.0"});
+            this.set("fields", {bundle: "com.mycompany.app", version: "1"});
         }
 
         ,setFields: function(bundleId, version)

@@ -2,11 +2,13 @@
 define([
     "jquery", "underscore", "backbone", "helper/pubsub",
     "views/constraint",
-    "text!templates/xml/dict-constraints.xml"
+    "text!templates/xml/dict-constraints.xml",
+    "collections/constraint-values"
 ], function(
     $, _, Backbone, PubSub,
     ConstraintView,
-    ConstraintsXMLTemplate
+    ConstraintsXMLTemplate,
+    ConstraintValuesCollection
 ){
    return Backbone.Model.extend({
 
@@ -19,12 +21,21 @@ define([
            this.setMin("");
            this.setMax("");
            this.setPattern("");
-           this.setValues({values: []});
+           this.setValuesCollection(new ConstraintValuesCollection());
            this.setNullableSelected(false);
            this.setMinSelected(false);
            this.setMaxSelected(false);
            this.setPatternSelected(false);
        }
+
+       , setValuesCollection(collection) {
+           this.set("valuesCollection", collection);
+        }
+
+        , getValuesCollection() {
+            return this.get("valuesCollection");
+        }
+
 
        ,render: function()
        {
@@ -71,6 +82,8 @@ define([
            if(this.getMinSelected() && this.getMinAvailable()) return true;
            if(this.getMaxSelected() && this.getMaxAvailable()) return true;
            if(this.getPatternSelected() && this.getPatternAvailable()) return true;
+
+           if(this.getValuesCollection().models.length > 0) return true;
 
            return false;
        }
@@ -195,41 +208,12 @@ define([
            return this.get("pattern");
        }
 
-       ,setValues: function(values)
-       {
-           this.set("values", values);
-       }
-
-       ,getValues: function()
-       {
-           return this.get("values");
-       }
-
-       ,addValue: function(value)
-       {
-           this.get("values").values.push(value)
-       }
-
-       ,removeValue: function(value)
-       {
-           var index = this.get("value").values.indexOf(value);
-           this.removeIndex(index);
-       }
-
-       ,removeIndex: function(index)
-       {
-           this.get("values").values.splice(index, 1);
-       }
-
        ,renderDictXML: function()
        {
            var xml = "";
            xml += this.xmlTemplate({model: this});
            return xml;
        }
-
-
-
 
    });
 });

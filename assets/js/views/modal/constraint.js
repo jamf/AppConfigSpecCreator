@@ -1,10 +1,12 @@
 //views/modal/constraint
 define([
     "jquery", "underscore", "backbone", "bootstrap", "helper/pubsub",
-    "text!templates/modal/constraint.html"
+    "text!templates/modal/constraint.html", "views/constraint-values", "views/modal/constraint-value",
+	  "models/constraint-value"
 ], function(
     $, _, Backbone, Bootstrap, PubSub,
-    ConstraintModalTemplate
+    ConstraintModalTemplate, ConstraintValuesView, ConstraintValueModalView,
+    ConstraintValueModel
 ){
     return Backbone.View.extend({
 
@@ -14,21 +16,64 @@ define([
         {
             var that = this;
 
+	          this.model.set("constraintValuesView", new ConstraintValuesView({collection: this.model.getValuesCollection()}));
+
             this.render();
             $("#constraintModal").modal("show");
 
+	          PubSub.on("constraintModal:EditConstraintValue", this.showConstraintValueModal, this);
+	          PubSub.on("constraintModal:Update", this.renderSubsets, this);
         }
+
+        , setConstraintValuesView(v) {
+            this.model.set("constraintValuesView", v);
+            this.$el.on("shown.bs.modal", function () {
+                $("#fieldConstraintsMin").focus();
+            });
+        }
+
+        , getConstraintValuesView() {
+            return this.model.get("constraintValuesView");
+        }
+
+        , showConstraintValueModal: function (model, collection) {
+            new ConstraintValueModalView({model: model}).linkParentView(this).setTargetCollection(collection).render();
+        }
+
+        ,renderSubsets: function () {
+            let m = this.model;
+            this.$el.find("#fieldConstraintValues").empty();
+            this.$el.find("#fieldConstraintValues").append(m.get("constraintValuesView").render().$el);
+	      }
 
         ,render: function()
         {
             this.$el.html(this.template({model: this.model}));
-
+            this.renderSubsets();
             this.$el.appendTo("#modalsDiv");
         }
 
         ,events: {
             "click #constraintSave": "saveHandler",
-            "click #constraintCancel": "cancelHandler"
+            "click #constraintCancel": "cancelHandler",
+            "keydown": "keyAction",
+            "click #fieldConstraintValuesAdd": "constraintValueModalCallback"
+        }
+
+        , constraintValueModalCallback: function (e) {
+            e.preventDefault();
+            var collection = this.model.getValuesCollection();
+            var model = new ConstraintValueModel();
+            this.showConstraintValueModal(model, collection);
+        }
+
+        , keyAction: function(e) {
+            var code = e.keyCode || e.which;
+            if (code == 27) {
+              this.cancelHandler(e);
+            } else if (code == 13) {
+              this.saveHandler(e);
+            }
         }
 
         ,saveHandler: function()

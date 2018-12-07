@@ -47,7 +47,15 @@ define([
 
 		,events: {
 			"click #localesAdd" : "addGroup",
-			"click #localesCancel": "cancelHandler"
+			"click #localesCancel": "cancelHandler",
+			"keydown": "keyAction"
+		}
+
+		, keyAction: function(e) {
+			var code = e.keyCode || e.which;
+			if (code == 27) {
+				this.cancelHandler(e);
+			}
 		}
 
 		,addGroup: function()

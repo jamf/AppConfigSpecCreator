@@ -34,7 +34,8 @@ define([
 				description: new LocalizedValueModel(),
 				options: new ArrayOptionsCollection(),  //<- the collection of array options
 				group: "-- none --",  // <- the default group will be the reserved `-- none --` group
-				constraints: new ConstraintsModel("Integer")
+				constraints: new ConstraintsModel("Integer"),
+				hidden: false // presentation hidden type
 			};
 
 			this.set("fields", fields);
@@ -43,8 +44,16 @@ define([
 			PubSub.on("LocaleAdd", this.add, this);
 		}
 
+		, setHidden: function (hidden) {
+			this.get("fields").hidden = hidden;
+		}
+		, getHidden: function (hidden) {
+			return this.get("fields").hidden;
+		}
+
 		, setLocalesCollection: function (collection) {
 			this.localesCollection = collection;
+			this.get("fields").options.setLocalesCollection(collection);
 			return this;
 		}
 
@@ -92,9 +101,26 @@ define([
 		 * @returns {String} returns the string `type` attribute
 		 */
 		, getPresType: function () {
-			var that = this;
-			var dataType = this.get("fields").dataType;
-			return dataType.includes("Array") ? _.findWhere(that.arrayTypes, {label: that.get("fields").arrayType}).key : dataType == "Date" ? "datetime" : dataType == "Boolean" ? "checkbox" : "input";
+			if (this.get("fields").hidden) {
+				return "hidden";
+
+			} else {
+				var that = this;
+				var dataType = this.get("fields").dataType;
+
+				if (dataType.includes("Array")) {
+					return _.findWhere(that.arrayTypes, {label: that.get("fields").arrayType}).key;
+
+				} else if (dataType == "Date") {
+					return "datetime";
+
+				} else if (dataType == "Boolean") {
+					return "checkbox"
+
+				} else {
+					return "input";
+				}
+			}
 		}
 	});
 });

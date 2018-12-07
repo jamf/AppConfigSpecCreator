@@ -14,6 +14,17 @@ define([
         {
             var that = this;
 
+            this.$el.on("shown.bs.modal", function () {
+                $("#elementValue").focus();
+            });
+            // TODO: (explanation in 'dismissModal' function)
+	          $("#arrayElementModal").not(".in").parent().modal("destroy"); // destroy removes all events listeners, modal and internal views.
+	          $("#arrayElementModal").not(".in").parent().remove(); // remove leftover modals if any
+
+            // setup temp data for modal locale shenanigans
+            if (this.model.collectionType == "arrayElement") {
+              this.localeTemp = {selection: "en-US", label: this.model.localizedLabel};
+            }
         }
 
         ,render: function()
@@ -29,7 +40,7 @@ define([
 
             $("#arrayElementModal").modal("show");
         }
-        
+
         ,renderValue: function()
         {
             var that = this;
@@ -40,7 +51,27 @@ define([
         ,events: {
             "click #elementSave": "saveHandler",
             "click #elementCancel": "cancelHandler",
-            "change #elementType" : "typeChange"
+            "change #elementType" : "typeChange",
+            "change #optionFieldLocale": "localeSelectionChanged",
+            "keydown": "keyAction"
+	      }
+
+        , keyAction: function(e) {
+            var code = e.keyCode || e.which;
+            if (code == 27) {
+              this.cancelHandler(e);
+            } else if (code == 13) {
+              this.saveHandler(e);
+            }
+        }
+
+        , localeSelectionChanged: function() {
+          var prevLocale = this.localeTemp.selection;
+          var newLocale = $("#optionFieldLocale").val();
+          this.localeTemp.selection = newLocale;
+
+          this.localeTemp.label.setLocalizedValue(prevLocale, $("#labelValue").val());
+          $("#labelValue").val(this.localeTemp.label.getLocalizedValue(newLocale));
         }
 
         /**
@@ -53,15 +84,26 @@ define([
             e.preventDefault();
 
             var value = $("#elementValue").val();
-            this.model.set({"value": value})
+            this.model.set({"value": value});
+
+            if (this.model.collectionType == "arrayElement") {
+              // cache current locale values
+              var currentLocale = $("#optionFieldLocale").val();
+              this.localeTemp.label.setLocalizedValue(currentLocale, $("#labelValue").val());
+
+              // flush temp locale changes
+              this.model.saveLocaleData(this.localeTemp.label);
+            }
 
             //check if we are saving existing instead of adding as well
             if(this.model.fresh) {
                 this.collection.add(this.model);
             }
 
-            //Save the element type to the model
-            this.model.type = this.getType();
+            if (this.model.collectionType == "defaultValue") {
+              //Save the element type to the model
+              this.model.type = this.getType();
+            }
 
             //set the model's fresh attribute to false
             //This enables the model to be edited later
@@ -78,6 +120,8 @@ define([
         {
             e.preventDefault();
 
+            this.parentView.renderSubsets();
+
             this.dismissModal();
         }
 
@@ -89,9 +133,18 @@ define([
         {
             $("#arrayElementModal").modal('hide');
 
-
+            var that = this;
             this.$el.on("hidden.bs.modal", function(){
-                PubSub.trigger("deleteView", this);
+                // PubSub.trigger("deleteView", that);
+                // TODO: the array options modal has some odd glitches
+                // for some reason it leaves behind some old views
+                // that mess up new modals later on, here is a workaround to
+                // make sure things work as intended
+                // in place of just calling the PubSub method above:
+
+                that.remove(); // remove the new element view
+                $("#arrayElementModal").not(".in").parent().remove(); // remove leftover modals because duplicates sometimes get created on editing for reasons I have not yet figured out
+                PubSub.trigger("snippetModal:Update"); // make sure the snippet modal is rendered with changes
             });
         }
 

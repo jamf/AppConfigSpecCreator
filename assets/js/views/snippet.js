@@ -35,7 +35,15 @@ define([
 
 		, events: {
 			"click": "edit",
-			"drop": "drop"
+			"drop": "drop",
+			"click .remove-snippet": "removeSnippet",
+		},
+
+		removeSnippet: function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			this.model.trigger("removeFromCollection", this.model);
+			PubSub.trigger("refreshFormView")
 		}
 
 		/**

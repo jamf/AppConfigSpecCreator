@@ -25,6 +25,15 @@ if(typeof defaultValueType === 'undefined') defaultValueType = "Literal";
     { %>
             <div class="defaultValue-checkbox">
             <input type="checkbox" id="fieldDefaultValue" value="" <%- view.model.get("value") ? "checked" : ""%>/>
+              <span id="checkboxValueText"></span>
+              <script>
+                function checkboxValue() {
+	                let val = $("#fieldDefaultValue").is(":checked") ? "True" : "False";
+	                $("#checkboxValueText").html(val);
+                }
+                $("#fieldDefaultValue").click(checkboxValue);
+                checkboxValue();
+              </script>
             </div>
 <%  }
     else if(dataType == "Date")

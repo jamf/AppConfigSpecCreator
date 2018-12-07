@@ -77,6 +77,10 @@ define([], function(){
                     key: "locale",
                     label: "Locale"
                 },
+                ou: {
+                    key: "ou",
+                    label: "Organizational Unit"
+                },
                 sAMAccountName: {
                     key: "sAMAccountName",
                     label: "SAM Account Name"

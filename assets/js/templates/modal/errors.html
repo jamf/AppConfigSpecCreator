@@ -1,0 +1,21 @@
+<div class="modal fade" role="dialog" id="errorsModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Errors</h4>
+            </div>
+            <div class="modal-body row">
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                  <% _.each(model.errors, function(error) { %>
+                    Line <%= error.substring(11) %><% /* removes "file_0.xml:" prefix */ %><hr>
+                  <% }); %>
+                  You may still download and use the generated file but it is not recommended as it may not work correctly.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="errorsClose">Cancel</button>
+                <button type="button" class="btn btn-warning" id="errorsDownload">Download</button>
+            </div>
+        </div>
+    </div>
+</div>

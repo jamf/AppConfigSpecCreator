@@ -17,6 +17,9 @@ define([
 
 			$("#localeModal").modal("show");
 
+			this.$el.on("shown.bs.modal", function () {
+				$("#localeName").focus();
+			});
 		}
 
 		,render: function()
@@ -28,7 +31,17 @@ define([
 
 		,events: {
 			"click #localeSave" : "saveHandler",
-			"click #localeCancel" : "cancelHandler"
+			"click #localeCancel" : "cancelHandler",
+			"keydown": "keyAction"
+		}
+
+		, keyAction: function(e) {
+			var code = e.keyCode || e.which;
+			if (code == 27) {
+				this.cancelHandler(e);
+			} else if (code == 13) {
+				this.saveHandler(e);
+			}
 		}
 
 

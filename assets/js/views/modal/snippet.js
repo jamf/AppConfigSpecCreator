@@ -18,6 +18,7 @@ define([
 			this.defaultValueView = new DefaultValueView({model: this.model.get("fields").defaultValue}).linkView(this);
 			this.arrayOptionsView = new ArrayOptionsView({collection: this.model.get("fields").options});
 			this.render();
+			this.dataTypeChange(); // array data type select box shows correct type but not the options 'Array Elements' view with it
 
 			//this prevents the modal from being exited from clicking the background or hitting the escape key
 			$("#snippetModal").modal({
@@ -125,9 +126,18 @@ define([
 			"click #fieldCancel": "cancelHandler",
 			"click #fieldArrayOptionsAdd": "arrayOptionModalCallback",
 			"click #fieldDefaultValueAdd": "arrayOptionModalCallback",
-			"change #fieldLocale": "localeSelectionChanged"
+			"change #fieldLocale": "localeSelectionChanged",
+			"keydown": "keyAction"
 		}
 
+		, keyAction: function(e) {
+			var code = e.keyCode || e.which;
+			if (code == 27) {
+				this.cancelHandler(e);
+			} else if (code == 13) {
+				this.saveHandler(e);
+			}
+		}
 		/**
 		 * Save the fields from the modal
 		 * @param e  The mouse event from the dom
@@ -152,6 +162,7 @@ define([
 			fields.label = this.localeTemp.label;
 			fields.description = this.localeTemp.description;
 
+			fields.hidden = $("#fieldHiddenToggle").prop("checked");
 			fields.dataType = this.getDataType();
 			fields.defaultValue.set({"value": this.getDefaultValue()});
 			fields.defaultValue.set({"type": this.getDefaultValueType()});
@@ -270,13 +281,17 @@ define([
 
 			//this is the target array to be passed to the array options view. Defaulted to the main `options` array in the snippet model
 			var collection = this.model.get("fields").options;
+			collection.collectionType = "arrayElement"
 
 			//If we clicked on the "add" button for the default value, change the target to the default value array instead
-			if (target == "defaultValue") collection = this.model.get("fields").defaultValue.collection;
+			if (target == "defaultValue") {
+				collection = this.model.get("fields").defaultValue.collection;
+				collection.collectionType = "defaultValue"
+			};
 
 			//create a new array modal view with the model being a new array element
 			// model based on the currently selected data type
-			var model = new ArrayOptionModel(this.getDataType())
+			var model = new ArrayOptionModel(this.getDataType()).setLocalesCollection(this.model.getLocalesCollection());
 			this.showArrayOptionModal(model, collection);
 		}
 
@@ -285,6 +300,7 @@ define([
 		 * @param model  the model the modal should use
 		 */
 		, showArrayOptionModal: function (model, collection) {
+			model.collectionType = collection.collectionType;
 			new ArrayOptionModalView({model: model}).linkParentView(this).setTargetCollection(collection).render();
 		}
 

@@ -8,6 +8,30 @@
                 <h4 class="modal-title">New Element</h4>
             </div>
             <div class="modal-body row">
+            <% if (model.collectionType == "arrayElement") { %>
+                <!--Locale list-->
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="fieldLocale" class="col-sm-4 control-label">Locale</label>
+                    <div class="col-sm-6">
+                        <select id="optionFieldLocale" class="form-control">
+                            <option>en-US</option>
+                            <% model.localesCollection.each( function(locale) { %>
+                            <option><%- locale.get("name") %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-horizontal form-group form-inline col-sm-12">
+                    <label for="elementValue" class="col-sm-4 control-label">Label</label>
+                    <div class="col-sm-6" id="labelValueDiv">
+                        <input type="text" id="labelValue" class="form-control" placeholder="value" value="<%- model.localizedLabel.getLocalizedValue('en-US') %>"/>
+                    </div>
+                </div>
+
+                <hr>
+                <% } %>
+                <% if (model.collectionType == "defaultValue") { %>
                 <div class="form-horizontal form-group form-inline col-sm-12">
                     <label for="elementType" class="col-sm-4 control-label">Element Type</label>
                     <div class="col-sm-6">
@@ -21,7 +45,7 @@
                         </select>
                     </div>
                 </div>
-
+                <% } %>
                 <div class="form-horizontal form-group form-inline col-sm-12">
                     <label for="elementValue" class="col-sm-4 control-label">Value</label>
                     <div class="col-sm-6" id="elementValueDiv">

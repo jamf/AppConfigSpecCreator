@@ -1,11 +1,11 @@
 //models/array-option
 define([
     "jquery", "underscore", "backbone", "helper/variable-types", "helper/pubsub",
-    "views/array-option", "helper/variables"
+    "views/array-option", "helper/variables", "models/localized-value"
 
 ], function(
    $, _, Backbone, VariableTypes, PubSub,
-   ArrayOptionView, EMMVariables
+   ArrayOptionView, EMMVariables, LocalizedValueModel
 ){
     return Backbone.Model.extend({
 
@@ -25,6 +25,9 @@ define([
 
             //grab the variable types
             this.variableTypes = VariableTypes;
+
+            this.localizedLabel = new LocalizedValueModel();
+            this.localizedLabel.setLocalizedValue("en-US", "");
         }
 
         ,setDataType: function(dataType)
@@ -39,6 +42,20 @@ define([
             }
 
             this.dataType = dataType;
+        }
+
+        // save temporary localized name data
+        , saveLocaleData: function (localizedLabel) {
+            this.localizedLabel = localizedLabel;
+        }
+
+        , setLocalesCollection: function (collection) {
+            this.localesCollection = collection;
+            return this;
+        }
+
+        , getLocalesCollection: function () {
+            return this.localesCollection;
         }
     });
 });
